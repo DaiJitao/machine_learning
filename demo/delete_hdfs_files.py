@@ -66,7 +66,7 @@ def sentiment_file_delete(history_file):
     delete(hdfspath, intervaltime, history_file)
     print("情感分析task目录开始检查文件...")
     hdfspath = "/sentiment/taskDir/"
-    intervaltime = 1 * 24 * 60 * 60  # 1天
+    # intervaltime = 1 * 24 * 60 * 60  # 1天
     delete(hdfspath, intervaltime, history_file)
     print("情感分析文件删除完毕")
     return True
