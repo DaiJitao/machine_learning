@@ -60,7 +60,7 @@ def count_id(filePath, outPath):
                 taskId = dict_data['taskId']
                 time_seg = taskId.split(":")[1]
                 time = parse(time_seg)
-                if time >= parse("20191023000000") and time <= parse("20191023080000"):
+                if time >= parse("20191023060000") and time <= parse("20191023150000"):
                     data = dict_data["data"]
                     for res in data:
                         assetId = res["assetId"]
@@ -68,17 +68,20 @@ def count_id(filePath, outPath):
                         industryDynamic = res['industryDynamic']
                         assetInIndustrys = res["assetInIndustrys"]
                         assetInIndustrysSecondlevel = res["assetInIndustrysSecondlevel"]
-                        result = []
-                        s.add(taskId)
-                        result.append(str(len(s)))
-                        result.append(taskId)
-                        result.append(assetId)
-                        result.append(webGroupId)
-                        result.append(industryDynamic)
-                        result.append(str(assetInIndustrys))
-                        result.append(assetInIndustrysSecondlevel)
-                        out_file.write(",".join(result))
-                        out_file.write("\n")
+                        #if webGroupId == "1":
+                        #if industryDynamic != "0":
+                        if assetInIndustrys == 1:
+                            result = []
+                            s.add(taskId)
+                            result.append(str(len(s)))
+                            result.append(taskId)
+                            result.append(assetId)
+                            result.append(webGroupId)
+                            result.append(industryDynamic)
+                            result.append(str(assetInIndustrys))
+                            result.append(assetInIndustrysSecondlevel)
+                            out_file.write(",".join(result))
+                            out_file.write("\n")
 
                 if openNum % 1000 == 0:
                     out_file.flush()
@@ -90,7 +93,67 @@ def count_id(filePath, outPath):
             traceback.print_exception(e)
 
 
+import pandas as pd
+import numpy as np
+import os
+
+
+def count_all(filePath):
+    '''
+    统计webgroupID
+    :param filePath:
+    :param outPath:
+    :return:
+    '''
+    with open(filePath, mode='r') as file:
+        try:
+
+            s = set()
+            ases = []
+            lines = file.readlines()
+            taskIds = []
+            for line in lines:
+                dict_data = json.loads(line)
+                taskId = dict_data['taskId']
+                time_seg = taskId.split(":")[1]
+                time = parse(time_seg)
+                if time >= parse("20191023060000") and time <= parse("20191023150000"):
+                    taskIds.append(taskId)
+                    data = dict_data["data"]
+                    for res in data:
+                        assetId = res["assetId"]
+                        webGroupId = res["webGroupId"]
+                        industryDynamic = res['industryDynamic']
+                        assetInIndustrys = res["assetInIndustrys"]
+                        assetInIndustrysSecondlevel = res["assetInIndustrysSecondlevel"]
+                        ases.append(1)
+                        #if webGroupId == "1":
+                        #if industryDynamic != "0":
+                        if assetInIndustrys == 1:
+                            result = []
+                            s.add(taskId)
+                            result.append(str(len(s)))
+                            result.append(taskId)
+                            result.append(assetId)
+                            result.append(webGroupId)
+                            result.append(industryDynamic)
+                            result.append(str(assetInIndustrys))
+                            result.append(assetInIndustrysSecondlevel)
+
+            print(len(ases))
+        except Exception as e:
+            traceback.print_exception(e)
+
+
+
+
+
 if __name__ == "__main__":
     inFilePath = r"C:\Users\dell\Desktop\20191023.txt"
-    outFilePath = "./4_count.txt"
-    count_id(inFilePath, outFilePath)
+    t = "assetInIndustrys"
+    # outFilePath = "./" + t + "_count.csv"
+    # count_id(inFilePath, outFilePath)
+    # d = pd.read_csv(outFilePath, dtype=np.str)
+    # d.to_excel("./count/" + t + "_count.xls")
+    # os.remove(outFilePath)
+    count_all(inFilePath)
