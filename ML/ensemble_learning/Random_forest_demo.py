@@ -130,7 +130,7 @@ def load_competition_data():
     return data_res
 
 
-def load_competition_test_data():
+def load_competition_ceShiData():
     '''
     加载数据：测试集
     :return:
@@ -247,6 +247,7 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
 
     best_args_model("./result/best_args_res.csv", X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
+    print(X_train)
     # 最佳参数
     # n_estimator = 2000
     # max_depth = 20
