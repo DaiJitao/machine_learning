@@ -49,7 +49,7 @@ if __name__ == "__main__":
         if i == 1:
             plt.plot(x_test, y_hat, '--', color=clr[i], linewidth=2, label='Depth=%d' % depth[i])
         else:
-            plt.plot(x_test, y_hat, '-', color=clr[i], linewidth=2, label='Depth=%d' % depth[i])
+            plt.plot(x_test, y_hat, '*-', color=clr[i], linewidth=2, label='Depth=%d' % depth[i])
     plt.legend(loc='upper left')
     plt.grid()
     plt.show()
