@@ -31,6 +31,7 @@ def get_ershoufang_data(home_url):
         print("访问：", url)
         home_html = get_html(index_url=url)
         parse_html(home_html, out_file=out_path + "erSouFang" + str(page) + ".xlsx")
+        print("saved: ", "erSouFang" + str(page) + ".xlsx")
         interval = random.choice(seconds)
         time.sleep(interval)
     print("采集完毕，一共采集%s页！" % size)
