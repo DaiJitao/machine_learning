@@ -9,7 +9,8 @@ from urllib.parse import urlparse
 from multiprocessing import cpu_count
 import random
 
-times = [4 * 60, 13 * 50, 11 * 60, 12 * 60, 3.56 * 60, 4.56 * 60, 7.2 * 60, 9.33 * 60, 60 * 4.16, 8 * 6.98, ]
+times = [8.96 * 60, 11.3 * 50, 12.602 * 60, 10.2 * 60, 7.56 * 60, 4.56 * 60, 12.62 * 60, 9.33 * 60, 60 * 6.16,
+         8 * 7.58, ]
 cpu_cores = cpu_count()
 agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0",
           "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
@@ -124,6 +125,61 @@ def group_thread(size):
             end = start + interval
             gs.append([start, end])
     return gs
+
+
+def get_page_num(url):
+    try:
+        home_html = get_html(index_url=url)
+        doc = pq(home_html)
+        li_list = doc.find(".pager a")
+        a_list = [a for a in li_list.items()]
+        # print(a_list)
+        size = a_list[-2].text().strip()
+        return int(size)
+    except:
+        return 17
+
+
+def get_xinfang_page_num(url):
+    pass
+
+
+def load_xinfang_data(html, out_file):
+    doc = pq(html)
+    links = []
+    titles = []
+    prices = []
+    addresses = []
+    huxings = []
+    tags = []
+    try:
+        loads = doc.find(".key-list.imglazyload")
+        item_mods = loads.find(".item-mod")
+        for item_mod in item_mods.items():
+            infos = item_mod.find(".infos")
+            title_el = infos.find(".lp-name")
+            title = title_el.text().strip()
+            link = title_el.attr('href')
+            # 地址
+            address = infos.find(".address").text().strip()
+            huxing = infos.find(".huxing").text().strip()  # huxing
+            tag = infos.find(".tag-panel").text().strip()  # tag-panel
+            price = item_mod.find(".favor-pos").text().strip()
+            links.append(link)
+            titles.append(title)
+            addresses.append(address)
+            huxings.append(huxing)
+            tags.append(tag)
+            prices.append(price)
+
+    except:
+        pass
+
+    writer = pd.ExcelWriter(out_file, engine="xlsxwriter", options={'strings_to_urls': False})
+    data = pd.DataFrame(
+        {'title': titles, "地址": addresses, "楼盘价格": prices, "户型": huxings, "标签": tags, "链接": links})
+    data.to_excel(writer, index=False)
+    writer.save()
 
 
 def parse_html(html, out_file):

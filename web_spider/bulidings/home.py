@@ -1,7 +1,7 @@
 """
 爬取主要小区信息
 """
-from web_spider.bulidings.utils import get_html, parse_html
+from web_spider.bulidings.utils import get_html, parse_html, get_page_num, mkdir, load_xinfang_data
 import pandas as pd
 import time
 import random
@@ -16,16 +16,41 @@ ershoufang_url = "https://chengde.58.com/chengdexian/ershoufang/"
 # 承德县新房  "https://chengde.58.com/xinfang/loupan/chengdexian/"
 xinfang_url = "https://chengde.58.com/xinfang/loupan/chengdexian/"
 
+seconds = [60 * 11.22, 60 * 6.32, 60 * 9.09, 60 * 7.32, 60 * 9.02, 60 * 6.56, 60 * 5.229, 60 * 5.9, 60 * 7.02, 60 * 8.3]
 
-def get_ershoufang_data():
-    for page in range(1, 18):
+
+def get_ershoufang_data(home_url):
+    size = get_page_num(home_url)
+    print("获取页数：", size)
+    dir_ = time.strftime('%Y-%m-%d-%H_%M', time.localtime(time.time()))
+    out_path = "./data/erShoufang/" + dir_ + "/"
+    mkdir(out_path)
+    time.sleep(seconds[-3])  # 休眠
+    for page in range(1, size + 1):
         url = "https://chengde.58.com/chengdexian/ershoufang/pn" + str(page) + "/"
-
+        print("访问：", url)
         home_html = get_html(index_url=url)
-        parse_html(home_html, out_file="./test" + str(page) + ".xlsx")
-        seconds = [60*10.22, 60 * 5.32, 60 * 4.09, 60 * 9.02, 60 * 6.56, 60 * 3.229, 60 * 5.9, 60 * 7.02, 60 * 4.3]
+        parse_html(home_html, out_file=out_path + "erSouFang" + str(page) + ".xlsx")
         interval = random.choice(seconds)
         time.sleep(interval)
+    print("采集完毕，一共采集%s页！" % size)
 
 
-get_ershoufang_data()
+def save_xinfang():
+    # 新房---------------------------------------------------------------------------
+    time.sleep(60 * 11.633)
+    xinfang_name = time.strftime('%Y-%m-%d-%H_%M', time.localtime(time.time()))
+    xinfang_url = "https://chengde.58.com/xinfang/loupan/chengdexian/"
+    xinfang_html = get_html(index_url=xinfang_url)
+    load_xinfang_data(xinfang_html, out_file="./data/xinfang/" + xinfang_name + ".xlsx")
+
+def main():
+    # 二手房
+    home_url = "https://chengde.58.com/chengdexian/ershoufang/"
+    get_ershoufang_data(home_url)
+    # save_xinfang()
+
+
+
+if __name__ == '__main__':
+    main()
