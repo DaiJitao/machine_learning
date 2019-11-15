@@ -16,7 +16,7 @@ ershoufang_url = "https://chengde.58.com/chengdexian/ershoufang/"
 # 承德县新房  "https://chengde.58.com/xinfang/loupan/chengdexian/"
 xinfang_url = "https://chengde.58.com/xinfang/loupan/chengdexian/"
 
-seconds = [60 * 11.22, 60 * 6.32, 60 * 9.09, 60 * 7.32, 60 * 9.02, 60 * 6.56, 60 * 5.229, 60 * 5.9, 60 * 7.02, 60 * 8.3]
+seconds = [60 * 11.22, 60 * 6.32, 60 * 9.09, 60 * 7.32, 60 * 9.02, 60 * 12.56, 60 * 6.229, 60 * 5.9, 60 * 9.02, 60 * 8.13]
 
 
 def get_ershoufang_data(home_url):
@@ -30,6 +30,9 @@ def get_ershoufang_data(home_url):
         url = "https://chengde.58.com/chengdexian/ershoufang/pn" + str(page) + "/"
         print("访问：", url)
         home_html = get_html(index_url=url)
+        if home_url == None or len(home_html) < 1200:
+            print(home_html)
+            print(url, "爬取失败！")
         parse_html(home_html, out_file=out_path + "erSouFang" + str(page) + ".xlsx")
         print("saved: ", "erSouFang" + str(page) + ".xlsx")
         interval = random.choice(seconds)
@@ -49,7 +52,7 @@ def main():
     # 二手房
     home_url = "https://chengde.58.com/chengdexian/ershoufang/"
     get_ershoufang_data(home_url)
-    # save_xinfang()
+    save_xinfang()
 
 
 

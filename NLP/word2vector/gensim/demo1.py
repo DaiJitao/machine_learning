@@ -26,6 +26,9 @@ jieba.suggest_freq('林华华', True)
 jieba.suggest_freq('陆亦可', True)
 jieba.suggest_freq('刘新建', True)
 jieba.suggest_freq('刘庆祝', True)
+jieba.suggest_freq("京州市", True) # #True表示希望分出来，False表示不希望分出来。
+jieba.suggest_freq("H省", True)
+jieba.suggest_freq("副书记", True)
 
 
 def clean_data(file, outFIle):
@@ -50,27 +53,38 @@ def mode(file, modelFile):
 
 if __name__ == "__main__":
     file = r"F:\NLP_learnings\data\word2vec\chinese\in_the_name_of_people\in_the_name_of_people.txt"
-    cleanData = r"F:\NLP_learnings\data\word2vec\chinese\in_the_name_of_people\cleaned.txt"
-    outmodel = r"F:\NLP_learnings\data\word2vec\chinese\in_the_name_of_people\model"
+    cleanData = r"F:\NLP_learnings\data\word2vec\chinese\in_the_name_of_people\cleaned2.txt"
+    outmodel = r"F:\NLP_learnings\data\word2vec\chinese\in_the_name_of_people\model2"
+    model_1 = r"E:\BaiduNetdiskDownload\实战-机器学习\word2vec\word2vec_c_from_weixin\word2vec_c"
     startTime = time.time()
     # model = mode(file, outModel)
     # endTime = time.time()
     # print("消费时间（分钟）：", (endTime-startTime) // 60 )
     # print(model['man'])
+    # 清洗数据。分词
     # clean_data(file, cleanData)
-    sentences = word2vec.LineSentence(cleanData)
-    # model = word2vec.Word2Vec(sentences, sg=1, size=200, window=3, min_count=5, negative=3, sample=0.001, hs=1,
-    #                           workers=4)
-    # model.save(outmodel)
+    train = False
+    if train:
+        sentences = word2vec.LineSentence(cleanData)  # 使其格式化
+        # workers参数用于设置并发训练时候的线程数，不过仅当Cython安装的情况下才会起作用
+        # 模型保存和训练
+        model = word2vec.Word2Vec(sentences, sg=0, size=256, window=8, min_count=20, negative=3, sample=0.001, hs=1,
+                                  workers=4)
+        model.save(outmodel)
 
-    model = word2vec.Word2Vec.load(outmodel)
+    # 加载模型
+    model = word2vec.Word2Vec.load(model_1)
+    #
+    # req_count = 5
+    # for key in model.wv.similar_by_word('旅游', topn=100):
+    #     if len(key[0]) == 3:
+    #         req_count -= 1
+    #         print(key[0], key[1])
+    #         if req_count == 0:
+    #             break
+    #
+    # print(model.wv.doesnt_match(u"沙瑞金 高育良 李达康 刘庆祝".split()))
+    # print(model.most_similar("沙瑞金"))
+    print(model.similarity("女人", "男人"))
+    print(model.similarity("您好", "你好"))
 
-    req_count = 5
-    for key in model.wv.similar_by_word('旅游', topn=100):
-        if len(key[0]) == 3:
-            req_count -= 1
-            print(key[0], key[1])
-            if req_count == 0:
-                break
-
-    print(model.wv.doesnt_match(u"沙瑞金 高育良 李达康 刘庆祝".split()))
