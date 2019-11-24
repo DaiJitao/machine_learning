@@ -16,7 +16,8 @@ ershoufang_url = "https://chengde.58.com/chengdexian/ershoufang/"
 # 承德县新房  "https://chengde.58.com/xinfang/loupan/chengdexian/"
 xinfang_url = "https://chengde.58.com/xinfang/loupan/chengdexian/"
 
-seconds = [60 * 11.22, 60 * 6.32, 60 * 9.09, 60 * 7.32, 60 * 9.02, 60 * 12.56, 60 * 6.229, 60 * 5.9, 60 * 9.02, 60 * 8.13]
+seconds = [60 * 11.22, 60 * 6.32, 60 * 9.09, 60 * 7.32, 60 * 9.02, 60 * 12.56, 60 * 6.229, 60 * 5.9, 60 * 9.02,
+           60 * 8.13]
 
 
 def get_ershoufang_data(home_url):
@@ -48,12 +49,12 @@ def save_xinfang():
     xinfang_html = get_html(index_url=xinfang_url)
     load_xinfang_data(xinfang_html, out_file="./data/xinfang/" + xinfang_name + ".xlsx")
 
+
 def main():
     # 二手房
     home_url = "https://chengde.58.com/chengdexian/ershoufang/"
     get_ershoufang_data(home_url)
     save_xinfang()
-
 
 
 if __name__ == '__main__':

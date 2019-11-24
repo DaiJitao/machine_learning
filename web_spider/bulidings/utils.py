@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 from multiprocessing import cpu_count
 import random
 
-times = [8.96 * 60, 11.3 * 50, 12.602 * 60, 10.2 * 60, 7.56 * 60, 4.56 * 60, 12.62 * 60, 9.33 * 60, 60 * 6.16,
+times = [8.96 * 60, 11.3 * 50, 12.602 * 60, 10.2 * 60, 7.56 * 60, 5.56 * 60, 12.62 * 60, 9.33 * 60, 60 * 6.16,
          8 * 7.58, ]
 cpu_cores = cpu_count()
 agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0",
@@ -19,16 +19,22 @@ agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Fir
           'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 SE 2.X MetaSr 1.0',
           'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; rv:11.0) like Gecko',
           'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36 Core/1.63.5680.400 QQBrowser/10.2.1852.400']
-languages = ["zh-CN,zh;q=0.9", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"]
+languages = ["zh-CN,zh;q=0.9", "zh-CN,zh;q=0.9,en;q=0.8", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"]
+
+accepts = ["text/plain", "application/json, text/javascript","*/*",
+           "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"]
 
 
 def __get_page(index_url, encoding):
     # print("access url: ", index_url)
     agent = random.choice(agents)
     acl = random.choice(languages)
+    accept = random.choice(accepts)
     headers = {'accept-language': acl,
-               "Accept": "text/plain", "Accept-Encoding": "gzip, deflate, br",
+               "Accept": accept,
+               "Accept-Encoding": "gzip, deflate, br",
                "User-Agent": agent,
+               "Content-Type": "application/x-www-form-urlencoded",
                "Origin": "https://bj.5i5j.com"
                }
     try:
