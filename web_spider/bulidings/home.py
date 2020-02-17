@@ -47,6 +47,7 @@ def save_xinfang():
     xinfang_name = time.strftime('%Y-%m-%d-%H_%M', time.localtime(time.time()))
     xinfang_url = "https://chengde.58.com/xinfang/loupan/chengdexian/"
     xinfang_html = get_html(index_url=xinfang_url)
+    mkdir("./data/xinfang/")
     load_xinfang_data(xinfang_html, out_file="./data/xinfang/" + xinfang_name + ".xlsx")
 
 
