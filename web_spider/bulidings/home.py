@@ -6,7 +6,9 @@ import time
 import random
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO,
+                    filename=r'E:\log\building\demo.log',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 #  二手房
@@ -29,6 +31,7 @@ def get_ershoufang_data(home_url, page_url_sub, out_path):
     dir_ = time.strftime('%Y-%m-%d-%H_%M', time.localtime(time.time()))
     out_path = out_path + dir_ + "/"
     mkdir(out_path)
+    logging.info("sleeping...")
     time.sleep(random.choice(seconds))  # 休眠
     for page in range(1, size + 1):
         # url = "https://chengde.58.com/chengdexian/ershoufang/pn" + str(page) + "/"
@@ -60,7 +63,7 @@ def main():
     urls = {
         "chengdexian_ershoufang": "https://chengde.58.com/chengdexian/ershoufang/",  # 二手房 承德县
         "chengdexian_xinfang": "https://chengde.58.com/xinfang/loupan/chengdexian/",  # 新房 承德县
-        "chengdexian_page_url_sub": "https://chengde.58.com/chengdexian/ershoufang/pn" #二手房翻页
+        "chengdexian_page_url_sub": "https://chengde.58.com/chengdexian/ershoufang/pn"  # 二手房翻页
     }
     home_url = urls['chengdexian_ershoufang']
     get_ershoufang_data(home_url,
