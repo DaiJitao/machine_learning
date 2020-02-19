@@ -25,20 +25,11 @@ accepts = ["text/plain", "application/json, text/javascript", "*/*",
            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"]
 
 
-def __get_page(index_url, encoding, headers=None):
+def __get_page(index_url, encoding, headers):
     # print("access url: ", index_url)
     agent = random.choice(agents)
     acl = random.choice(languages)
     accept = random.choice(accepts)
-    if headers == None:
-        headers = {'accept-language': acl,
-                   "Accept": accept,
-                   "Accept-Encoding": "gzip, deflate, br",
-                   "User-Agent": agent,
-                   "Content-Type": "application/x-www-form-urlencoded",
-                   "Origin": "https://bj.5i5j.com"
-                   }
-
     try:
         response = requests.get(index_url, headers=headers)
         if response.status_code == 200:
@@ -78,7 +69,11 @@ def mkdir(path):
 
 
 def save_data_txt(file_path, name, data):
-    with open(file_path + name, 'w') as file:
+    if file_path.endswith("/"):
+        file = file_path + name
+    else:
+        file = file_path + "/" + name
+    with open(file, 'w',encoding='utf-8') as file:
         file.write(data)
 
 

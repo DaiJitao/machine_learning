@@ -1,12 +1,12 @@
 import pandas as pd
 from kafka import KafkaConsumer
-from project.parsejson import count_file_nums
+# from project.parsejson import count_file_nums
 
 # kafka配置
 conf = {
     'host': ['10.121.17.193:9092', '10.121.17.194:9092', '10.121.17.195:9092'],
-    'topic': 'LabelTopic_v1',  # 'LabelTopic', # "PosNegTopic", #'LabelTopic',
-    'groupid': "1",  # 'car-group',
+    'topic': "CarKBTopicTest", #"LabelTopic_v1", # 'PosNegTopic_v1', # 'LabelTopic_v1',  # 'LabelTopic', # "PosNegTopic", #'LabelTopic',
+    'groupid': "a",  # 'car-group',
     'max_request_size': 52428800  # 50M
 }
 
@@ -64,9 +64,8 @@ def readKafka2():
                              auto_offset_reset='earliest')  # earliest ,auto_offset_reset='latest'
     consumer.subscribe((conf['topic'],))
     count = 0
-
     for message in consumer:
-        # print(message)
+        count += 1
         if None == message.key:
             message_key = "No key"
             print(message.topic, message_key, message.value.decode('utf-8'))
@@ -74,11 +73,9 @@ def readKafka2():
             # topic = message.topic
             key = message.key.decode('utf-8')
             value = message.value.decode('utf-8')
-            if "20191203111316" in key:
-                print(value)
-            if key == "fd-L:20191203111316:500050-21:ceshi62yq-consumer-group":
-                print(value)
-            count += 1
+            print(count)
+            print("key=",key," value=",value)
+            print("\n")
             if count % 200 == 0:
                 print("计算次数", count)
 
@@ -88,8 +85,33 @@ def main():
     filePath = r"C:\Users\dell\Desktop\taskDir"
     out_file = "./count/taskID5.xls"
     out_txt = "./count/all_values1.txt"
-    count, taskIDs, taskId_times = count_file_nums(filePath, None, None)
-    readKafka(True, out_file, out_txt, taskId_times)
+    # count, taskIDs, taskId_times = count_file_nums(filePath, None, None)
+    # readKafka(True, out_file, out_txt, taskId_times)
+
+def readKafka3():
+    print('consumer start to consuming...')
+    consumer = KafkaConsumer(bootstrap_servers=conf['host'], group_id="3",
+                             auto_offset_reset='earliest')  # earliest ,auto_offset_reset='latest'
+    consumer.subscribe((conf['topic'],))
+    count = 0
+
+    for message in consumer:
+        if None == message.key:
+            message_key = "No key"
+            print(message.topic, message_key, message.value.decode('utf-8'))
+        else:
+            # topic = message.topic
+            key = message.key.decode('utf-8')
+            value = message.value.decode('utf-8')
+            temp_key = "fd-L_20200103214958_6097_xhwnews-consumer-group".replace("_", ":")
+            # print(temp_key)
+            if key == temp_key:# "fd-L:20200103203912:1823:xhwnews-consumer-group":
+                print(value)
+            count += 1
+            if count % 200 == 0:
+                print(temp_key)
+                print("计算次数", count)
+
 
 if __name__ == '__main__':
     readKafka2()
