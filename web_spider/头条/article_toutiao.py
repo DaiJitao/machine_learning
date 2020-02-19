@@ -55,6 +55,7 @@ def load_page(article_url):
 
 
 def sub_url(url):
+    """视频连接截取"""
     try:
         start_index_p = url.index("?")
         return url[:start_index_p]
