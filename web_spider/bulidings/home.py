@@ -29,7 +29,7 @@ def get_ershoufang_data(home_url, page_url_sub, out_path):
     dir_ = time.strftime('%Y-%m-%d-%H_%M', time.localtime(time.time()))
     out_path = out_path + dir_ + "/"
     mkdir(out_path)
-    time.sleep(random.choice(seconds[-3]))  # 休眠
+    time.sleep(random.choice(seconds))  # 休眠
     for page in range(1, size + 1):
         # url = "https://chengde.58.com/chengdexian/ershoufang/pn" + str(page) + "/"
         url = page_url_sub + str(page) + "/"
