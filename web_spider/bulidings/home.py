@@ -7,7 +7,7 @@ import random
 import logging
 
 logging.basicConfig(level=logging.INFO,
-                    filename=r'E:\log\building\demo.log',
+                    # filename=r'E:\log\building\demo.log',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -67,9 +67,10 @@ def main():
     }
     home_url = urls['chengdexian_ershoufang']
     get_ershoufang_data(home_url,
-                        page_url_sub=urls['chengdexian_page_url_sub'], out_path="./data/chengDeXian/erShouFang/")
+                        page_url_sub=urls['chengdexian_page_url_sub'],
+                        out_path="E:/building/data/chengDeXian/erShouFang/")
     xinFang_url = urls['chengdexian_xinfang']
-    save_xinfang(xinFang_url, out_path="./data/chengDeXian/xinFang/")
+    save_xinfang(xinFang_url, out_path="E:/building/data/chengDeXian/xinFang/")
 
 
 if __name__ == '__main__':
