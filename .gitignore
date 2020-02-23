@@ -1,4 +1,5 @@
 web_spider/bulidings/__pycache__
 web_spider/bulidings/data
 /.idea/
+*.log
 
