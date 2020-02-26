@@ -8,6 +8,12 @@ import csv
 from urllib.parse import urlparse
 from multiprocessing import cpu_count
 import random
+import logging
+
+logging.basicConfig(level=logging.INFO,
+                    # filename=r'E:\log\building\demo.log',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 times = [8.96 * 60, 11.3 * 50, 12.602 * 60, 10.2 * 60, 7.56 * 60, 5.56 * 60, 12.62 * 60, 9.33 * 60, 60 * 6.16,
          8 * 7.58, ]
@@ -21,7 +27,7 @@ agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Fir
           'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36 Core/1.63.5680.400 QQBrowser/10.2.1852.400']
 languages = ["zh-CN,zh;q=0.9", "zh-CN,zh;q=0.9,en;q=0.8", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"]
 
-accepts = ["text/plain", "application/json, text/javascript","*/*",
+accepts = ["text/plain", "application/json, text/javascript", "*/*",
            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"]
 
 
@@ -62,10 +68,16 @@ def get_html(index_url, encoding="utf-8", try_times=3):
 
 
 def mkdir(path):
+    """
+    创建目录
+    """
     try:
-        os.makedirs(path)
-    except:
-        pass
+        if not os.path.exists(path):
+            os.makedirs(path)
+            logging.info("创建路径" + path + "成功！")
+    except Exception as e:
+        logging.error("路径" + path + " 创建失败！")
+        raise Exception(e)
 
 
 def save_data_txt(file_path, name, data):
