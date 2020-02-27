@@ -32,6 +32,11 @@ def get_page(url):
                "User-Agent": agent
                }
     response = requests.get(url,headers=headers)
+    print(response.links)
+    print(response.json)
+    print(response.history)
+    print(response.raw)
+    print(dir(response))
     if response.status_code == 200:
         return response.text
     elif response.status_code == 403:
@@ -39,6 +44,7 @@ def get_page(url):
 
 
 if __name__ == '__main__':
-    url = "https://www.toutiao.com/i6792817006111359495/"
+    url = "http://www.iesdouyin.com/share/user/98569634382?sec_uid=MS4wLjABAAAAukfxyGQmo3HK9N26B8v6SkhCwbtbjEqlThz1U_zxkcI&utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=copy&utm_source=copy"
+
     html = get_page(url)
     print(html)
