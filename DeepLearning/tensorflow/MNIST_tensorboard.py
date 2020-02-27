@@ -52,7 +52,7 @@ with tf.Session() as sess:
     sess.run(init)
     writer = tf.summary.FileWriter(log_file, sess.graph)
     print("图已经保存--" + log_file)
-    for epoch in range(1):
+    for epoch in range(21):
         for batch in range(n_batch):
             batch_xs, batch_ys = mnist.train.next_batch(batch_size)
             sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys})
@@ -61,4 +61,5 @@ with tf.Session() as sess:
         print("Iter " + str(epoch) + ",Testing Accuracy " + str(acc))
 """
 tensorboard --logdir=E:\log\tensorflow_tensorboard
+http://localhost:6006/#graphs
 """
