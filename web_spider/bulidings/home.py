@@ -25,7 +25,7 @@ seconds = [60 * 11.22, 60 * 6.32, 60 * 9.09, 60 * 7.32, 60 * 9.02, 60 * 12.56, 6
            60 * 8.13]
 
 
-def get_ershoufang_data(home_url, page_url_sub, out_path):
+def save_ershoufang_data(home_url, page_url_sub, out_path):
     size = get_page_num(home_url)
     logging.info("获取页数：" + str(size))
     dir_ = time.strftime('%Y-%m-%d-%H_%M', time.localtime(time.time()))
@@ -66,9 +66,9 @@ def main():
         "chengdexian_page_url_sub": "https://chengde.58.com/chengdexian/ershoufang/pn"  # 二手房翻页
     }
     home_url = urls['chengdexian_ershoufang']
-    get_ershoufang_data(home_url,
-                        page_url_sub=urls['chengdexian_page_url_sub'],
-                        out_path="E:/building/data/chengDeXian/erShouFang/")
+    save_ershoufang_data(home_url,
+                         page_url_sub=urls['chengdexian_page_url_sub'],
+                         out_path="E:/building/data/chengDeXian/erShouFang/")
     xinFang_url = urls['chengdexian_xinfang']
     save_xinfang(xinFang_url, out_path="E:/building/data/chengDeXian/xinFang/")
 

@@ -1,7 +1,10 @@
 web_spider/bulidings/__pycache__
+DeepLearning/__pycache__
+DeepLearning/tensorflow/MNIST_data
 web_spider/bulidings/data
 utils/data
-DeepLearning/tensorflow/MNIST_data
 /.idea/
 *.log
+*.xml
+
 

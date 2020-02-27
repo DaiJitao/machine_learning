@@ -3,10 +3,10 @@
 import os
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+from DeepLearning.utils import mkdir
 
 log_file = r"E:\log\tensorflow_tensorboard"
-if not os.path.exists(log_file):
-    os.mkdir(log_file)
+mkdir(log_file)
 MNIST_data = r"E:\data\MNIST_data_sets\MNIST_data"
 # 载入数据集
 mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
@@ -33,8 +33,8 @@ with tf.name_scope("layer"):
             prediction = tf.nn.softmax(wx_plus_b)
 
 # 二次代价函数
-with tf.name_scope("loss"):
-    loss = tf.reduce_mean(tf.square(y - prediction))
+with tf.name_scope("loss-function"):
+    loss = tf.reduce_mean(tf.square(y - prediction),name="loss")
 
 with tf.name_scope("train"):
     # 使用梯度下降法
@@ -50,15 +50,16 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 with tf.Session() as sess:
     sess.run(init)
-    writer = tf.summary.FileWriter(log_file, sess.graph)
+
     print("图已经保存--" + log_file)
-    for epoch in range(21):
+    for epoch in range(200):
         for batch in range(n_batch):
             batch_xs, batch_ys = mnist.train.next_batch(batch_size)
             sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys})
 
         acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y: mnist.test.labels})
         print("Iter " + str(epoch) + ",Testing Accuracy " + str(acc))
+    writer = tf.summary.FileWriter(log_file, sess.graph)
 """
 tensorboard --logdir=E:\log\tensorflow_tensorboard
 http://localhost:6006/#graphs
