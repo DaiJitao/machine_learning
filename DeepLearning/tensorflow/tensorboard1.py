@@ -10,6 +10,7 @@ from DeepLearning.utils import mkdir
 # 载入数据集
 mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
 
+display_step = 50
 # 每个批次的大小
 batch_size = 100
 # 计算一共有多少个批次
@@ -55,7 +56,7 @@ with tf.Session() as sess:
     sess.run(init)
     mkdir('E:/log/tensorboard')
     writer = tf.summary.FileWriter('E:/log/tensorboard', sess.graph)
-    for epoch in range(1):
+    for epoch in range(10):
         for batch in range(n_batch):
             batch_xs, batch_ys = mnist.train.next_batch(batch_size)
             sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys})

@@ -44,6 +44,7 @@ try:
             _response = entry['response']
             _content = _response['content']
             # 获取接口返回内容
+            print(_response)
             print(_content)
             print("<<<============================")
 except Exception as e:
