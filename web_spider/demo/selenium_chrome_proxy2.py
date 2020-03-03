@@ -1,4 +1,4 @@
-from browsermobproxy import Server  # pip install browsermob-proxy
+from browsermobproxy import Server  ,client# pip install browsermob-proxy
 from selenium import webdriver
 import requests
 
@@ -48,9 +48,10 @@ def get_signature_url(user_url):
         option = ChromeOptions()  # FirefoxOptions()
         option.add_experimental_option('excludeSwitches', ['enable-automation'])  # 爬虫关键字
 
-        # webdriver.Firefox(options,executable_path=fireFox_driver)  # # webdriver.Firefox(firefox_options=chrome_options)#
         driver = webdriver.Chrome(chrome_options=chrome_options, options=option)
+
         proxy.new_har("douyin", options={'captureHeaders': True, 'captureContent': True})
+
         logger.info("原始URL {}".format(url))
         driver.get(user_url)
         time.sleep(3)
