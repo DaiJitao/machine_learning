@@ -1,4 +1,4 @@
-from browsermobproxy import Server, client  # pip install browsermob-proxy
+from browsermobproxy import Server  # pip install browsermob-proxy
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -8,16 +8,13 @@ import requests
 from urllib.parse import urlparse
 import json
 
-
-
 '''
 参考网址：
 https://blog.csdn.net/qq_32502511/article/details/101536325
 '''
-fireFox_driver = "F:\pycharm_workspce\dai_github\ml_test1\machine_learning\project\spider_learning\driver\geckodriver-v0.26.0-win64\geckodriver.exe"
 logger = get_logger()
 
-ua = USER_AGENTS[1]
+driver_path = r"F:\pycharm_workspace\python3_x\machine_learning\project\spider_learning\driver\geckodriver-v0.26.0-win64\geckodriver.exe"
 
 
 def get_json(url, headers=None, encoding='utf-8'):
@@ -43,37 +40,27 @@ def get_signature_url(user_url):
         server.start()
         proxy = server.create_proxy()
 
-        options = webdriver.ChromeOptions() # ChromeOptions()
+        options = webdriver.FirefoxOptions()
+        # options.add_argument("--headless")
         options.add_argument("--proxy-server={0}".format(proxy.proxy))
         options.add_argument('--disable-gpu')
-        # options.add_argument('--dump-dom')
-        # options.add_argument('--disable-web-security')
-        # options.headless = True
-
         options.add_argument('lang=zh_CN.UTF-8')
-        options.add_argument("user-agent=" + ua)
+        options.add_argument("user-agent=" + USER_AGENTS[0])
         options.add_argument('accept=' + accept[0])
         options.add_argument("accept-language=" + accept_language[0])
         options.add_argument('accept-encoding="gzip, deflate, br"')
         options.add_argument("upgrade-insecure-requests=1")
         options.add_argument('cache-control="max-age=0"')
-        options.add_experimental_option('excludeSwitches', ['enable-automation'])  # 爬虫关键字
+        options.add_argument("Cookie='_ga=GA1.2.500940217.1582528192; _gid=GA1.2.1014623963.1583113987'")
+        options.add_argument("Host=www.iesdouyin.com")
+        # options.headless = True
+        # options.add_experimental_option('excludeSwitches', ['enable-automation'])  # 爬虫关键字
 
-        # webdriver.Firefox(options,executable_path=fireFox_driver)  # # webdriver.Firefox(firefox_options=chrome_options)#
-        driver = webdriver.Chrome(options=options)
+        driver = webdriver.Firefox(firefox_options=options, executable_path=driver_path)
         proxy.new_har("douyin", options={'captureHeaders': True, 'captureContent': True})
         logger.info("原始URL {}".format(url))
-        driver.set_network_conditions(
-            offline=False,
-            latency=5,  # additional latency (ms)
-            download_throughput=500 * 1024,  # maximal throughput
-            upload_throughput=500 * 1024)  # maximal throughput
-
         driver.get(user_url)
-        network = driver.get_network_conditions()
-        print(network)
-
-        time.sleep(3)
+        time.sleep(6)
         result = proxy.har  # 获取HAR
         # print(result)
         for entry in result['log']['entries']:
@@ -82,11 +69,6 @@ def get_signature_url(user_url):
             # # 根据URL找到数据接口,这里要找的是 http://git.liuyanlin.cn/get_ht_list 这个接口
             if "_signature" in _url:
                 logger.info("获取到用户第一个数据请求接口------>>>\n{}".format(_url))
-                driver.get(_url)
-                cookies = driver.get_cookies()
-                time.sleep(3)
-                print(driver.page_source)
-                print(cookies)
                 return _url
                 # print(_url)
                 # _response = entry['response']
@@ -105,8 +87,9 @@ if __name__ == '__main__':
     # 账号
     url = "http://www.iesdouyin.com/share/user/98569634382?sec_uid=MS4wLjABAAAAukfxyGQmo3HK9N26B8v6SkhCwbtbjEqlThz1U_zxkcI"
     data_url = get_signature_url(url)
+    print(data_url)
     headers = {
-        "User-Agent": ua,
+        "User-Agent": USER_AGENTS[0],
         "accept-language": accept_language[0],
         "upgrade-insecure-requests": "1",
         "accept": accept[0],
@@ -116,14 +99,14 @@ if __name__ == '__main__':
         "accept-encoding": "gzip, deflate, br",
         "cookie": "_ga=GA1.2.637118698.1582697580; _gid=GA1.2.129343412.1583039039"
     }
-    p = urlparse(data_url)
-    user_video_url = "https://" + p.hostname + p.path
-    temp = [part.split("=") for part in p.query.split("&")]
-    user_video_params = {part[0]: part[1] for part in temp}
-    print(user_video_params)
-    res = requests.get(user_video_url, headers=headers, params=user_video_params, timeout=4)
-    print(dir(res))
-    print("获取结果", res.json)
-    contentJson = json.loads(res.content.decode())
-    print(contentJson)
-
+    # p = urlparse(data_url)
+    # user_video_url = "https://" + p.hostname + p.path
+    # temp = [part.split("=") for part in p.query.split("&")]
+    # user_video_params = {part[0]: part[1] for part in temp}
+    # print(user_video_params)
+    #
+    # res = requests.get(user_video_url, headers=headers, params=user_video_params, timeout=4)
+    # print(dir(res))
+    # print(res.json)
+    # contentJson = json.loads(res.content.decode())
+    # print(contentJson)

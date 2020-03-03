@@ -6,5 +6,9 @@ utils/data
 /.idea/
 *.log
 *.xml
+web_spider/__pycache__/
+web_spider/demo/__pycache__/
+web_spider/douyin/VM2841.txt
+
 
 
