@@ -8,6 +8,7 @@ utils/data
 *.xml
 web_spider/__pycache__/
 web_spider/demo/__pycache__/
+NLP/pos_tagging/data/
 web_spider/douyin/VM2841.txt
 
 
