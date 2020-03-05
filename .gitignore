@@ -3,6 +3,8 @@ DeepLearning/__pycache__
 DeepLearning/tensorflow/MNIST_data
 web_spider/bulidings/data
 utils/data
+web_spider/__pycache__/
+web_spider/demo/__pycache__/
 /.idea/
 *.log
 *.xml
