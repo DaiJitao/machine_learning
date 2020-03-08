@@ -14,8 +14,7 @@ UA = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like G
 referer = "https://www.iesdouyin.com/share/user/98569634382?sec_uid=MS4wLjABAAAAukfxyGQmo3HK9N26B8v6SkhCwbtbjEqlThz1U_zxkcI"
 accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"
 
-options = ChromeOptions()  # FirefoxOptions()
-# options.add_argument('--disable-gpu')
+options = ChromeOptions()
 options.add_argument('lang=zh_CN.UTF-8')
 options.add_argument("user-agent=" + UA )
 options.add_argument('accept=' + accept)

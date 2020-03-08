@@ -1,6 +1,6 @@
 # map tag to id and id to tag
 
-
+import pprint
 
 def word_id(file):
     if file:
@@ -29,3 +29,6 @@ def word_id(file):
 if __name__ == '__main__':
     file = "./data/traindata.txt"
     id2word, word2id, id2tag, tag2id = word_id(file)
+    pprint.pprint(id2word["9"])
+    print(word2id)
+

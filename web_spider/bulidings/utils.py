@@ -44,7 +44,7 @@ def __get_page(index_url, encoding):
                "Origin": "https://bj.5i5j.com"
                }
     try:
-        response = requests.get(index_url, headers=headers)
+        response = requests.get(index_url, headers=headers, timeout=(30, 10))
         if response.status_code == 200:
             response.encoding = encoding  # 解决中文乱码 utf-8 'gb2312'
             return response.text
