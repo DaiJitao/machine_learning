@@ -3,11 +3,11 @@ DeepLearning/__pycache__
 DeepLearning/tensorflow/MNIST_data
 web_spider/bulidings/data
 utils/data
+web_spider/__pycache__/
+web_spider/demo/__pycache__/
 /.idea/
 *.log
 *.xml
-web_spider/__pycache__/
-web_spider/demo/__pycache__/
 NLP/pos_tagging/data/
 web_spider/douyin/VM2841.txt
 
