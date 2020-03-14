@@ -13,6 +13,14 @@ cf.read("./config.ini")
 types = cf.sections()
 logger.info("获取配置成功！{}".format(types))
 
+host=cf.get(types[0], 'host')
+user=cf.get(types[0],'user')
+password=cf.get(types[0], 'password')
+db=cf.get(types[0],'db')
+port=cf.get(types[0],'port')
+charset=cf.get(types[0], 'charset')
+
+
 character = "%&"
 
 
