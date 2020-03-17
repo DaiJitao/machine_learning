@@ -7,28 +7,27 @@ import pymysql
 import datetime
 
 logger = Logger("./logs/all_monitor.log").logger
-cf = configparser.ConfigParser()
 
-try:
-    cf.read("./config.ini")
-    types = cf.sections()
-    logger.info("获取配置成功！{}".format(types))
-except Exception as e:
-    traceback.print_exc()
-    logger.error(e)
-    logger.exception("{}".format(e))
-    sys.exit(1)
+# try:
+#     cf.read("./config.ini")
+#     types = cf.sections()
+#     logger.info("获取配置成功！{}".format(types))
+# except Exception as e:
+#     traceback.print_exc()
+#     logger.error(e)
+#     logger.exception("{}".format(e))
+#     sys.exit(1)
 
-host = cf.get(types[0], 'host')
-user = cf.get(types[0], 'user')
-password = cf.get(types[0], 'password')
-db = cf.get(types[0], 'db')
-port = cf.get(types[0], 'port')
-charset = cf.get(types[0], 'charset')
-toutiao_table = cf.get(types[0], 'toutiao_tb')
-douyin_tb = cf.get(types[0], 'douyin_tb')
+# host = cf.get(types[0], 'host')
+# user = cf.get(types[0], 'user')
+# password = cf.get(types[0], 'password')
+# db = cf.get(types[0], 'db')
+# port = cf.get(types[0], 'port')
+# charset = cf.get(types[0], 'charset')
+# toutiao_table = cf.get(types[0], 'toutiao_tb')
+# douyin_tb = cf.get(types[0], 'douyin_tb')
 
-interval = cf.get(types[1], "interval")
+
 
 
 class MySQL():
@@ -60,7 +59,7 @@ class MySQL():
             logger.error(e)
             logger.exception("{}".format(e))
             self.connection.rollback()
-            logger.error("update " + toutiao_table + " error! mysql rollbacked!")
+            logger.error("update " + self.tb + " error! mysql rollbacked!")
         finally:
             self.connection.close()
 
@@ -92,7 +91,7 @@ class MySQL():
             logger.error(e)
             logger.exception("{}".format(e))
             self.connection.rollback()
-            logger.error("update " + toutiao_table + " error! mysql rollbacked!")
+            logger.error("update " + self.tb + " error! mysql rollbacked!")
         finally:
             self.connection.close()
 
@@ -118,7 +117,7 @@ def gen_sql(tb, count_result, sql_result):
                                 'comment_total, comment_cycle,' \
                                 'video_total,video_cycle' \
                                 ') VALUES ({0}, {1}, {2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}, {14},{15},{16},{17},{18},{19},{20},{21},{22}, {23},{24});'
-    cycle_type = interval  # 周期量的类型
+    cycle_type = count_result['cycle_type']  # 周期量的类型
     # 计算数据总量
     total_data = sql_result['total_data']
     if count_result['total_data'] > total_data:
@@ -220,8 +219,8 @@ def gen_sql(tb, count_result, sql_result):
     return new_sql
 
 
-if __name__ == '__main__':
-    pass
+# if __name__ == '__main__':
+#     pass
     # mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
     # sql_result = mysql.latest_data()
     # mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)

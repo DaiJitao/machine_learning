@@ -32,6 +32,9 @@ charset = cf.get(types[0], 'charset')
 toutiao_table = cf.get(types[0], 'toutiao_tb')
 douyin_tb = cf.get(types[0], 'douyin_tb')
 
+
+interval = cf.get(types[1], "interval")
+
 character = "%&"
 
 
@@ -109,6 +112,7 @@ def douyin_count():
     count_result['article_total'] = article_size
     count_result['update_total'] = update_size
     count_result['video_total'] = video_size
+    count_result['cycle_type'] = interval
 
     mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
     mysql.update_data(count_result)
@@ -163,6 +167,8 @@ def toutiao_count():
     count_result['update_text_total'] = update_text_size
     count_result['update_video_total'] = update_video_size
 
+    count_result['cycle_type'] = interval
+
     mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=toutiao_table)
     mysql.update_data(count_result)
 
@@ -178,21 +184,21 @@ def douyin_task():
 
 
 def main():
-    interval = int(cf.get(types[1], "interval"))
+    time = int(interval)
     if "second" == cf.get(types[1], 'unit'):
-        schedule.every(interval).seconds.do(toutiao_task)
-        schedule.every(interval).seconds.do(douyin_task)
+        schedule.every(time).seconds.do(toutiao_task)
+        schedule.every(time).seconds.do(douyin_task)
         while True:
             schedule.run_pending()
             # time.sleep(10)
     elif "hour" == cf.get(types[1], 'unit'):
-        schedule.every(interval).hours.do(toutiao_task)
-        schedule.every(interval).hours.do(douyin_task)
+        schedule.every(time).hours.do(toutiao_task)
+        schedule.every(time).hours.do(douyin_task)
         while True:
             schedule.run_pending()
     elif "minute" == cf.get(types[1], 'unit'):
-        schedule.every(interval).minutes.do(toutiao_task)
-        schedule.every(interval).minutes.do(douyin_task)
+        schedule.every(time).minutes.do(toutiao_task)
+        schedule.every(time).minutes.do(douyin_task)
         while True:
             schedule.run_pending()
 
