@@ -48,7 +48,7 @@ CREATE TABLE `douyin_tb` (
   `comment_cycle` int(11) DEFAULT '0',
   `video_total` bigint(20) unsigned DEFAULT '0',
   `video_cycle` int(11) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='头条数据表';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='抖音数据表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
