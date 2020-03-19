@@ -8,24 +8,25 @@ import datetime
 
 logger = Logger("./logs/all_monitor.log").logger
 
-# try:
-#     cf.read("./config.ini")
-#     types = cf.sections()
-#     logger.info("获取配置成功！{}".format(types))
-# except Exception as e:
-#     traceback.print_exc()
-#     logger.error(e)
-#     logger.exception("{}".format(e))
-#     sys.exit(1)
+cf = configparser.ConfigParser()
+try:
+    cf.read("./config.ini")
+    types = cf.sections()
+    logger.info("获取配置成功！{}".format(types))
+except Exception as e:
+    traceback.print_exc()
+    logger.error(e)
+    logger.exception("{}".format(e))
+    sys.exit(1)
 
-# host = cf.get(types[0], 'host')
-# user = cf.get(types[0], 'user')
-# password = cf.get(types[0], 'password')
-# db = cf.get(types[0], 'db')
-# port = cf.get(types[0], 'port')
-# charset = cf.get(types[0], 'charset')
-# toutiao_table = cf.get(types[0], 'toutiao_tb')
-# douyin_tb = cf.get(types[0], 'douyin_tb')
+host = cf.get(types[0], 'host')
+user = cf.get(types[0], 'user')
+password = cf.get(types[0], 'password')
+db = cf.get(types[0], 'db')
+port = cf.get(types[0], 'port')
+charset = cf.get(types[0], 'charset')
+toutiao_table = cf.get(types[0], 'toutiao_tb')
+douyin_tb = cf.get(types[0], 'douyin_tb')
 
 
 
@@ -149,7 +150,7 @@ def gen_sql(tb, count_result, sql_result):
 
     article_micro_total = sql_result['article_micro_total']
     if count_result['article_micro_total'] > article_micro_total:
-        article_micro_cycle_num = count_result['article_micro_cycle_num'] - article_micro_total
+        article_micro_cycle_num = count_result['article_micro_total'] - article_micro_total
         article_micro_total = count_result['article_micro_total']
     else:
         article_micro_cycle_num = 0
