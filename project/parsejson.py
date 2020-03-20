@@ -236,15 +236,31 @@ def combine(values_file, src_path, out_file):
     print(out_file, "文件已经保存")
 
 
+def get_data():
+    file = r"G:\新华网项目\新华网前端设计思路\praise\test_data_clean.txt"
+    file2 = r"G:\新华网项目\新华网前端设计思路\praise\单文档数据.txt"
+    data = ""
+    with open(file, encoding="utf-8") as f:
+        c = f.read()
+        for doc in json.loads(c)['docs']:
+            line = doc['content']
+            print(line)
+            data += line.strip()
+    # with open(file2, mode="w", encoding="utf-8") as f:
+    #     f.write(data)
+
+
+
 if __name__ == "__main__":
-    filePath = r"C:\Users\dell\Desktop\taskDir"
-    values_file = "./count/all_values2.txt"
-    src_path = "C:/Users/dell/Desktop/taskDir1/"
-    out_file = "./count/stat_res3.xls"
-    combine(values_file, src_path, out_file)
-    e = get_title("C:/Users/dell/Desktop/taskDir1/fd-L_20191123061252_2503_xhwnews-consumer-group.txt")
-    print(e)
-    print(e['-6181288884544622998'])
+    get_data()
+    # filePath = r"C:\Users\dell\Desktop\taskDir"
+    # values_file = "./count/all_values2.txt"
+    # src_path = "C:/Users/dell/Desktop/taskDir1/"
+    # out_file = "./count/stat_res3.xls"
+    # combine(values_file, src_path, out_file)
+    # e = get_title("C:/Users/dell/Desktop/taskDir1/fd-L_20191123061252_2503_xhwnews-consumer-group.txt")
+    # print(e)
+    # print(e['-6181288884544622998'])
 
     # count, taskIDs, taskId_times = count_file_nums(filePath, None, None)
     # print(get_title(r"C:\Users\dell\Desktop\taskDir1\fd-L_20191123061252_2503_xhwnews-consumer-group.txt"))

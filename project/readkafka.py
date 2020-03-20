@@ -5,7 +5,7 @@ from kafka import KafkaConsumer
 # kafka配置
 conf = {
     'host': ['10.121.17.193:9092', '10.121.17.194:9092', '10.121.17.195:9092'],
-    'topic': "HotwordTopic", #"LabelTopic_v1", # 'PosNegTopic_v1', # 'LabelTopic_v1',  # 'LabelTopic', # "PosNegTopic", #'LabelTopic',
+    'topic': "LabelTopic_v1", #"HotwordTopic", #"LabelTopic_v1", # 'PosNegTopic_v1', # 'LabelTopic_v1',  # 'LabelTopic', # "PosNegTopic", #'LabelTopic',
     'groupid': "hot_word-",  # 'car-group',
     'max_request_size': 52428800  # 50M
 }
@@ -61,7 +61,7 @@ def readKafka(save, out_file, out_txt, taskID_times):
 def readKafka2():
     print('consumer start to consuming...')
     consumer = KafkaConsumer(bootstrap_servers=conf['host'], group_id="ggggg",
-                             auto_offset_reset='earliest')  # earliest ,auto_offset_reset='latest'
+                             auto_offset_reset='latest')  # earliest ,auto_offset_reset='latest' earliest
     consumer.subscribe((conf['topic'],))
     count = 0
     for message in consumer:
