@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import cross_validation
+# from sklearn import cross_validation
 from sklearn.svm import SVC # 分类模型
 from sklearn.svm import SVR # 回归模型
 from sklearn.model_selection import train_test_split
-from ML.svm.utilities import plot_classifier
+# from ML.svm.utilities import plot_classifier
 import threading
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import label_binarize, LabelEncoder
@@ -48,11 +48,11 @@ def train_model(params, file=None):
     # params = {'kernel': p[0]}
     classifier = SVC(**params)
     classifier.fit(X_train, y_train)
-    plot_classifier(classifier, X_train, y_train, 'Training dataset')
+    # plot_classifier(classifier, X_train, y_train, 'Training dataset')
     plt.show()
 
 
-def test_model(params, file=None):
+def model(params, file=None):
     '''
     # 分割数据集并用SVM训练模型
     :return:
@@ -62,7 +62,7 @@ def test_model(params, file=None):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=5)
     classifier = SVC(**params)
     classifier.fit(X_train, y_train)
-    plot_classifier(classifier, X_test, y_test, 'Test dataset')
+    # plot_classifier(classifier, X_test, y_test, 'Test dataset')
     plt.show()
 
 def report(params):
