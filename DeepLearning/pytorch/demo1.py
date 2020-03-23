@@ -1,6 +1,9 @@
 import torch
+import numpy as np
 import numpy
 from torch.autograd import Variable
+import matplotlib.pyplot as plt
+
 
 def demo1():
     a = numpy.arange(2, 8).reshape([3, 2])
@@ -39,5 +42,21 @@ def demo3():
 
     print(x.grad) # 在x=3的时候它的导数为6
 
+def demo4(x):
+    w = numpy.array([11,8,9]).reshape(1,3)
+    b = 4
+    x = np.array(x).reshape(3,1)
+    y = np.dot(w,x) + b
+
+    return y[0][0]
+
+
 if __name__ == '__main__':
-    demo2()
+    x1 = range(1, 10)
+    x2 = range(10,20)
+    x3 = range(12, 22)
+    y = []
+    for i in zip(x1, x2, x3):
+        y.append(demo4(i))
+    plt.plot(x1, y)
+    plt.show()
