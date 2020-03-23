@@ -24,7 +24,7 @@ class RNN(torch.nn.Module):
         # h_n: [num_layers,batch_size, hidden_size] # 虽然LSTM的batch_first为True,但是h_n/c_n的第一维还是num_layers
         # c_n: 同h_n
         output, (h_n, c_n) = self.rnn(x)
-        print(output.size())
+        # print(h_n.size())
         # output_in_last_timestep=output[:,-1,:] # 也是可以的
         output_in_last_timestep = h_n[-1, :, :]
         # print(output_in_last_timestep.equal(output[:,-1,:])) #ture
@@ -34,12 +34,12 @@ class RNN(torch.nn.Module):
 
 if __name__ == "__main__":
     # 1. 加载数据  训练集
-    training_dataset = torchvision.datasets.MNIST("./mnist", train=True,
-                                                  transform=torchvision.transforms.ToTensor(), download=True)
+    training_dataset = torchvision.datasets.MNIST(".\mnist", train=True,
+                                                  transform=torchvision.transforms.ToTensor(), download=False)
     dataloader = Data.DataLoader(dataset=training_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
 
     #  测试集
-    test_data = torchvision.datasets.MNIST(root="./mnist", train=False, transform=torchvision.transforms.ToTensor(),
+    test_data = torchvision.datasets.MNIST(root=".\mnist", train=False, transform=torchvision.transforms.ToTensor(),
                                            download=False)
     test_dataloader = Data.DataLoader(dataset=test_data, batch_size=1000, shuffle=False, num_workers=2)
     testdata_iter = iter(test_dataloader)  # 生成迭代器
@@ -51,16 +51,16 @@ if __name__ == "__main__":
     # 3. 网络的训练（和之前CNN训练的代码基本一样）
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
     loss_F = torch.nn.CrossEntropyLoss()
-    for epoch in range(1):  # 数据集只迭代一次
+    for epoch in range(10):  # 数据集只迭代一次
         for step, input_data in enumerate(dataloader):
             x, y = input_data
-            pred = net(x.view(-1, 28, 28))
-
+            x = x.view(-1, 28, 28)
+            pred = net(x)
             loss = loss_F(pred, y)  # 计算loss
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            if step % 50 == 49:  # 每50步，计算精度
+            if step % 100 == 0:  # 每50步，计算精度
                 with torch.no_grad():
                     test_pred = net(test_x)
                     prob = torch.nn.functional.softmax(test_pred, dim=1)
