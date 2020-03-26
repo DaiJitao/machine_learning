@@ -10,6 +10,7 @@ web_spider/demo/__pycache__/
 *.xml
 NLP/pos_tagging/data/
 web_spider/douyin/VM2841.txt
+DeepLearning/pytorch/mnist/
 
 
 
