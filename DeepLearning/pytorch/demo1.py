@@ -52,11 +52,10 @@ def demo4(x):
 
 
 if __name__ == '__main__':
-    x1 = range(1, 10)
-    x2 = range(10,20)
-    x3 = range(12, 22)
-    y = []
-    for i in zip(x1, x2, x3):
-        y.append(demo4(i))
-    plt.plot(x1, y)
-    plt.show()
+    a = [1,2]
+    aTensor = torch.Tensor(a)
+    print(torch.Tensor(a))
+    print(aTensor.shape)
+    print(aTensor.size())
+    c = aTensor.data[0]
+    print(type(aTensor.float()))
