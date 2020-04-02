@@ -4,6 +4,7 @@ import torch.optim as optim
 from torch.autograd import Variable
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 """
 # 一元线性回归
@@ -20,7 +21,7 @@ def load_data(x, a=2.0123, b=6.456):
 
 
 # 生成数据
-size = 100
+size = 50
 x_train = range(0, size)
 y_train = load_data(x_train)
 
@@ -48,7 +49,7 @@ if __name__ == '__main__':
     criterion = nn.MSELoss()
 
     # 定义优化器
-    optimizer = optim.Rprop(model.parameters(), lr=.002)
+    optimizer = optim.Rprop(model.parameters(), lr=.0001)
 
     # 训练模型
     num_epoches = 1000
@@ -57,14 +58,27 @@ if __name__ == '__main__':
         target = Variable(y_train)  # 实际值
         out = model(inputs)  # 预测值
         loss = criterion(out, target)
+        # 优化器用于更新网络参数
         optimizer.zero_grad()
+        # 求导
         loss.backward()
+        # 更新参数
         optimizer.step()
         if (epach + 1) % 1 == 0:
-            print("epoch:{}, loss:{:.2f}".format(epach, loss))
+            print("epoch:{}, loss:{:.2f}".format(epach, loss.data))
+
+    model.eval()
+    predit = model(Variable(x_train))
+    predit = predit.data.numpy()
+
+    plt.figure()
+    plt.subplot(1, 1, 1)
+    plt.plot(x_train, y_train, label="train data")
+    plt.plot(x_train,predit,label='predict data')
+    plt.show()
+    print("退出。。。")
+    sys.exit(1)
 
 
-# plt.figure()
-# plt.subplot(1, 1, 1)
-# plt.plot(x_train, y_train)
-# plt.show()
+
+
