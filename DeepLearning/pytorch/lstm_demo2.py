@@ -1,6 +1,7 @@
 import torch
 import torch.utils.data as Data
 import torchvision
+from torchvision import transforms
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -32,31 +33,32 @@ class RNN(torch.nn.Module):
         return x
 
 
+data_tf = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=[0.0], std=[1.0])])
+
 if __name__ == "__main__":
     # 1. 加载数据  训练集
     training_dataset = torchvision.datasets.MNIST(".\mnist", train=True,
-                                                  transform=torchvision.transforms.ToTensor(), download=False)
+                                                  transform=data_tf, download=False)
     dataloader = Data.DataLoader(dataset=training_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
 
     #  测试集
-    test_data = torchvision.datasets.MNIST(root=".\mnist", train=False, transform=torchvision.transforms.ToTensor(),
-                                           download=False)
+    test_data = torchvision.datasets.MNIST(root=".\mnist", train=False, transform=data_tf, download=False)
     test_dataloader = Data.DataLoader(dataset=test_data, batch_size=1000, shuffle=False, num_workers=2)
     testdata_iter = iter(test_dataloader)  # 生成迭代器
     test_x, test_y = testdata_iter.next()
-    test_x = test_x.view(-1, 28, 28)
+    test_x = test_x.view(-1, 28, 28)  # 变为三维（，，）
     # 2. 网络搭建
     net = RNN()
     # 3. 训练
     # 3. 网络的训练（和之前CNN训练的代码基本一样）
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
-    loss_F = torch.nn.CrossEntropyLoss()
+    loss_Fuction = torch.nn.CrossEntropyLoss()
     for epoch in range(10):  # 数据集只迭代一次
         for step, input_data in enumerate(dataloader):
             x, y = input_data
             x = x.view(-1, 28, 28)
             pred = net(x)
-            loss = loss_F(pred, y)  # 计算loss
+            loss = loss_Fuction(pred, y)  # 计算loss
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

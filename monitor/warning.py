@@ -82,7 +82,7 @@ def gen_content(sql_result, type_name):
     time_insert = sql_result['time_insert'] # 终点时间
     time_start = time_insert - datetime.timedelta(minutes=int(cycle_type))
     if type_name == "toutiao":
-        time_scope = "报告时间:\t" + time_insert.strftime('%Y{0}%m{1}%d{2}%H:%M').format('/', '/', '/')
+        time_scope = "报告时间:\t" + time_insert.strftime('%Y{0}%m{1}%d{2} %H:%M').format('/', '/', '/')
         result.append(time_scope)
         result.append("-" * 66)
 
@@ -106,14 +106,14 @@ def gen_content(sql_result, type_name):
     # 文章
     if type_name == "toutiao":
         article_total = sql_result['article_total']
-        result.append(type + "文章采集量:" + str(article_total) + "\t条")
+        result.append(type + "文章采集量:\t" + str(article_total) + "\t条")
     # article_cycle_num = sql_result['article_cycle_num']
     # result.append("文章数据周期量:" + str(article_cycle_num))
 
     # micro
     if type_name == "toutiao":
         article_micro_total = sql_result['article_micro_total']
-        result.append(type + "微头条采集量:" + str(article_micro_total) + "\t条")
+        result.append(type + "微头条采集量:\t" + str(article_micro_total) + "\t条")
     # article_micro_cycle_num = sql_result['article_micro_cycle_num']
     # result.append("微头条数据周期量:" + str(article_micro_cycle_num))
 
@@ -123,19 +123,19 @@ def gen_content(sql_result, type_name):
     # result.append("视频数据周期量:" + str(article_video_cycle_num))
 
     update_total = sql_result['update_total']
-    result.append(type + "更新信息量:" + str(update_total) + "\t条")
+    result.append(type + "更新信息量:\t" + str(update_total) + "\t条")
     # update_cycle_num = sql_result['update_cycle_num']
     # result.append("更新数据周期量:" + str(update_cycle_num))
 
     if type_name == "toutiao":
         comment_total = sql_result['comment_total']
-        result.append(type + "评论数据总量:" + str(comment_total) + "\t条")
+        result.append(type + "评论数据总量:\t" + str(comment_total) + "\t条")
     # comment_cycle = sql_result['comment_cycle']
     # result.append("评论数据周期量:" + str(comment_cycle))
 
     if type_name == "douyin":
         video_cycle = sql_result['video_total']
-        result.append(type + "视频采集量:" + str(video_cycle) + "\t条")
+        result.append(type + "视频采集量:\t" + str(video_cycle) + "\t条")
         # video_cycle = sql_result['video_cycle']
     # result.append("视频信息数据总量:" + str(video_cycle))
 
