@@ -32,8 +32,11 @@ charset = cf.get(types[0], 'charset')
 toutiao_table = cf.get(types[0], 'toutiao_tb')
 douyin_tb = cf.get(types[0], 'douyin_tb')
 
-
 interval = cf.get(types[1], "interval")
+
+monitorFile = types[3]
+toutiao_user_file = cf.get(monitorFile, "toutiao_user_file")
+douyin_user_file = cf.get(monitorFile, "douyin_user_file")
 
 character = "%&"
 
