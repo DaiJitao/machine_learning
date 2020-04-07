@@ -5,7 +5,8 @@
 from gensim.models import word2vec, Word2Vec
 import time
 import logging
-import jieba_fast as jieba
+import jieba
+# import jieba_fast as jieba
 import json
 import re
 import os
