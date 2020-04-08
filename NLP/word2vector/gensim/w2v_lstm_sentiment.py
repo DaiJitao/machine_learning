@@ -2,8 +2,8 @@
 https://blog.csdn.net/qq_33335484/article/details/82772549
 https://github.com/freeingfree/lstm
  """
-
-import jieba_fast as jieba
+import jieba
+# import jieba_fast as jieba
 from gensim.models import word2vec, Word2Vec
 import json
 import re
