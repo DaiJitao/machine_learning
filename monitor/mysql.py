@@ -2,7 +2,7 @@ import configparser
 from logger import Logger
 import traceback
 import sys
-
+from query_sql import get_sql
 import pymysql
 import datetime
 
@@ -43,7 +43,7 @@ class MySQL():
         self.connection = pymysql.connect(host=host, user=user, password=pwd, db=db, port=port, charset=charset)
 
     def update_data(self, count_result):
-        """获取最新的一条数据"""
+        """更新一条数据"""
         try:
             with self.connection.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
                 sql = 'SELECT * FROM ' + self.tb + ' ORDER BY time_update DESC LIMIT 1;'
@@ -56,6 +56,24 @@ class MySQL():
                 cursor.execute(sql)
                 self.connection.commit()
                 logger.warn("successfully executed and commited the aboved sql on {}! ".format(self.tb))
+        except Exception as e:
+            logger.error(e)
+            logger.exception("{}".format(e))
+            self.connection.rollback()
+            logger.error("update " + self.tb + " error! mysql rollbacked!")
+        finally:
+            self.connection.close()
+
+    def last_week_data(self):
+        """获取上周最新的一条数据"""
+        try:
+            sql_mod = get_sql()
+            with self.connection.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
+                sql = sql_mod.replace("##table##", self.tb)
+                count = cursor.execute(sql)
+                sql_result = cursor.fetchone()
+                logger.info("上周数据 size: {} ,data:{}".format(count, sql_result))
+                return sql_result
         except Exception as e:
             logger.error(e)
             logger.exception("{}".format(e))

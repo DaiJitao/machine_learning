@@ -65,10 +65,11 @@ def send_email(smtp_server, receivers, email_content, from_addr='976185561@qq.co
         server.quit()
 
 
-def gen_content(sql_result, type_name):
+def gen_content(latest_sql_result, lweek_sql_result, type_name):
     '''
         组合邮件内容
-    :param sql_result:
+    :param latest_sql_result: 最新一条数据
+    :param lweek_sql_result: 上周最新一条数据
     :param type:
     :return:
     '''
@@ -77,67 +78,60 @@ def gen_content(sql_result, type_name):
     elif type_name == "douyin":
         type = "抖音号"
     result = []
-    cycle_type = sql_result['cycle_type']  # 周期量的类型
+    cycle_type = latest_sql_result['cycle_type']  # 周期量的类型
     # strftime('%Y-%m-%d %H:%M:%S')
-    time_insert = sql_result['time_insert'] # 终点时间
-    time_start = time_insert - datetime.timedelta(minutes=int(cycle_type))
+    time_insert = latest_sql_result['time_insert']  # 结束时间
+    # time_start = time_insert - datetime.timedelta(minutes=int(cycle_type))
     if type_name == "toutiao":
         time_scope = "报告时间:\t" + time_insert.strftime('%Y{0}%m{1}%d{2} %H:%M').format('/', '/', '/')
         result.append(time_scope)
-        result.append("-" * 66)
+        result.append("-" * 60)
 
     # cycle_type = "周期的类型:每隔" + cycle_type + "分钟"
     # result.append(cycle_type)
     # 计算数据总量
-    total_data = sql_result['total_data']
-    total_data_str = type + "数据采集量:\t" + str(total_data) + "\t条"
+    total_data = latest_sql_result['total_data']
+    week_data = lweek_sql_result['total_data']
+    plus = total_data - week_data
+    total_data_str = type + "数据采集量\t" + str(total_data) + "\t条,本周增量\t" + str(plus) + "\t条"
     result.append(total_data_str)
-    # cycle_num = sql_result["cycle_num"]
-    # cycle_str = "周期量:" + str(cycle_num)
-    # result.append(cycle_str)
-    # 账号总量
 
-    account_total = sql_result['account_total']
-    account_srt = type + "账号信息采集量:\t" + str(account_total) + "\t条"
+    account_total = latest_sql_result['account_total']
+    week_data = lweek_sql_result['account_total']
+    plus = account_total - week_data
+    account_srt = type + "账号信息采集量\t" + str(account_total) + "\t条,本周增量\t" + str(plus) + "\t条"
     result.append(account_srt)
-    # account_cycle_num = sql_result["account_cycle_num"]
-    # account_cycle_str = "账号数据周期量：" + str(account_cycle_num)
-    # result.append(account_cycle_str)
+
     # 文章
     if type_name == "toutiao":
-        article_total = sql_result['article_total']
-        result.append(type + "文章采集量:\t" + str(article_total) + "\t条")
-    # article_cycle_num = sql_result['article_cycle_num']
-    # result.append("文章数据周期量:" + str(article_cycle_num))
+        article_total = latest_sql_result['article_total']
+        week_data = lweek_sql_result['article_total']
+        plus = article_total - week_data
+        result.append(type + "文章采集量" + str(article_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
     # micro
     if type_name == "toutiao":
-        article_micro_total = sql_result['article_micro_total']
-        result.append(type + "微头条采集量:\t" + str(article_micro_total) + "\t条")
-    # article_micro_cycle_num = sql_result['article_micro_cycle_num']
-    # result.append("微头条数据周期量:" + str(article_micro_cycle_num))
+        article_micro_total = latest_sql_result['article_micro_total']
+        week_data = lweek_sql_result['article_micro_total']
+        plus = article_micro_total - week_data
+        result.append(type + "微头条采集量" + str(article_micro_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
-    # article_video_total = sql_result['article_video_total']
-    # result.append(type + "视频数据总量:" + str(article_video_total) + "\t条")
-    # article_video_cycle_num = sql_result['article_video_cycle_num']
-    # result.append("视频数据周期量:" + str(article_video_cycle_num))
-
-    update_total = sql_result['update_total']
-    result.append(type + "更新信息量:\t" + str(update_total) + "\t条")
-    # update_cycle_num = sql_result['update_cycle_num']
-    # result.append("更新数据周期量:" + str(update_cycle_num))
+    update_total = latest_sql_result['update_total']
+    week_data = lweek_sql_result['update_total']
+    plus = update_total - week_data
+    result.append(type + "更新信息量" + str(update_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
     if type_name == "toutiao":
-        comment_total = sql_result['comment_total']
-        result.append(type + "评论数据总量:\t" + str(comment_total) + "\t条")
-    # comment_cycle = sql_result['comment_cycle']
-    # result.append("评论数据周期量:" + str(comment_cycle))
+        comment_total = latest_sql_result['comment_total']
+        week_data = lweek_sql_result['comment_total']
+        plus = comment_total - week_data
+        result.append(type + "评论数据总量" + str(comment_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
     if type_name == "douyin":
-        video_cycle = sql_result['video_total']
-        result.append(type + "视频采集量:\t" + str(video_cycle) + "\t条")
-        # video_cycle = sql_result['video_cycle']
-    # result.append("视频信息数据总量:" + str(video_cycle))
+        video_total = latest_sql_result['video_total']
+        week_data = lweek_sql_result['comment_total']
+        plus = video_total - week_data
+        result.append(type + "视频采集量:" + str(video_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
     result = "\n".join(result)
     return result
@@ -148,15 +142,19 @@ def send_email_all():
     receivers = receivers.split(",")
     logger.info("receivers:{}".format(receivers))
     try:
+        latest_mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=toutiao_table)
+        latest_sql_result = latest_mysql.latest_data()  # 最新的一天数据
         mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=toutiao_table)
-        sql_result = mysql.latest_data()
-        result_toutiao = gen_content(sql_result, "toutiao")
+        lweek_res = mysql.last_week_data()
+        result_toutiao = gen_content(latest_sql_result, lweek_res, "toutiao")
         mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
-        sql_result = mysql.latest_data()
-        result_douyin = gen_content(sql_result, "douyin")
-        t = "\n" + "-" * 66 + "\n"
-        result = "自媒体采集系统采集情况报告：\n" + "-" * 66 + "\n" \
-                 + result_toutiao + t + result_douyin
+        latest_sql_result = mysql.latest_data()
+        mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
+        lweek_res = mysql.last_week_data()
+        result_douyin = gen_content(latest_sql_result, lweek_res, "douyin")
+        t = "\n" + "-" * 60 + "\n"
+        result = "自媒体采集系统采集情况报告：\n" + "-" * 60 + "\n" \
+                 + result_toutiao + t + result_douyin + t
         send_email(smtp_server, receivers=receivers, email_content=result)
 
     except Exception as e:
@@ -170,7 +168,7 @@ def send_email_task():
     t.start()
 
 
-def main():
+def main1():
     time = int(interval)
     if "second" == cf.get(email, 'unit'):
         schedule.every(time).seconds.do(send_email_task)
@@ -184,6 +182,12 @@ def main():
         schedule.every(time).minutes.do(send_email_task)
         while True:
             schedule.run_pending()
+
+
+def main():
+    schedule.every().friday.at("17:25").do(send_email_task)
+    while True:
+        schedule.run_pending()
 
 
 if __name__ == '__main__':
