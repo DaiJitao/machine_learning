@@ -1,7 +1,6 @@
 import time
 
 
-
 def printDemo():
     isFlag = True
     count = 0
@@ -33,6 +32,47 @@ def __max_sum(array):
     return max_sum, current_sum
 
 
+"""
+https://leetcode-cn.com/problems/two-sum/
+"""
+
+
+class Solution4(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        # 建立一个字典
+        d = dict()
+        for index, i in enumerate(nums):
+            key = str(i)
+            if key in d:
+                d.get(key).append(index)
+            else:
+                d.update({key: [index]})
+            index += 1
+        r = []
+        for index, i in enumerate(nums):
+            t = target - int(i)
+            tKey = str(t) # 目标值
+            if tKey in d:
+                indexLst = d.get(tKey)
+                # 删除重复元素
+                indexLstCopy = indexLst[:]
+                if index in indexLstCopy:
+                    indexLstCopy.remove(index)
+                r.extend(indexLstCopy)
+        return r
+
+
+
+
+
 if __name__ == "__main__":
-    array = [-4,0,-9,23,15,1]
-    print(__max_sum(array))
+    solution = Solution4()
+    l = [3,2,4]
+    # [[1,4],[4,5]] # [[1,3],[2,6],[8,10],[15,18]]
+    s = solution.twoSum(l,6)
+    print(s)
