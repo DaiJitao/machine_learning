@@ -7,7 +7,9 @@ import urllib.parse as parse
 
 logger = Logger("./logs/all_monitor.log").logger
 
-
+'''
+单用户统计
+'''
 def get_user(file, user_type):
     '''
     获取用户信息
@@ -76,3 +78,4 @@ if __name__ == '__main__':
     for user in users:
         id = user['user_id']
         print(id)
+        print(user)

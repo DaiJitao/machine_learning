@@ -34,12 +34,20 @@ def clean_text(text):
 
 
 def clean_cutwords(word):
-    if len(word.strip()) == 2:
-        word = re.sub(r"[前上下午中今明后][后年日月天午]|位于|第[一二三四五六七八九十]|[这那上下一二三四五六七八九十多][秒上下次条张之只枝件万千个片首种块套双组段座票根口弯湾头对米位篇叶日月克顿吨排层面包圈天年]", "", word)
-    if len(word.strip()) == 3:
-        word = re.sub(r"第[一二三四五六七八九十][秒次条张之只枝件万千个片首种块套双组段座票根口弯湾头对米位篇叶日月克顿吨排层面包圈天年]", "", word)
+    if word:
+        word = str(word)
+        if len(word.strip()) == 2:
+            word = re.sub(
+                r"[前上下午中今明后][后年日月天午]|位于|第[一二三四五六七八九十]|[期这那上下一二三四五六七八九十多][期秒上下次条张之只朵枝件万千个片首种块套双组段座票根口弯湾头对米位篇叶日月克顿吨排层面包圈天年]",
+                "", word)
+            return word
+        elif len(word.strip()) == 3:
+            word = re.sub(r"第[一二三四五六七八九十][期秒次条张之只朵枝件万千个片首种块套双组段座票根口弯湾头对米位篇叶日月克顿吨排层面包圈天年]", "", word)
+            return word
+        else:
+            return word
 
-    return word
+    return ''
 
 
 if __name__ == '__main__':
@@ -55,7 +63,7 @@ if __name__ == '__main__':
     file = "./data/hotword.txt"
     with open(file, mode="r", encoding="utf-8") as fp:
         i = 0
-        for line in fp.readlines()[200:1000]:
+        for line in fp.readlines()[:]:
             d = json.loads(line)['content']
             print(i )
             print(d)
