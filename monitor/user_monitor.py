@@ -7,29 +7,40 @@ import urllib.parse as parse
 
 logger = Logger("./logs/all_monitor.log").logger
 
+'''
+单用户统计
+'''
 def get_user(file, user_type):
+    '''
+    获取用户信息
+    :param file:
+    :param user_type:
+    :return: [{'url': '', 'name': '', 'first_classification': 1, 'second_classification': 1, 'province': '21', 'city': 0, 'county': 0, 'user_id': '3908764883'}]
+    '''
     users = []
     if user_type == "douyin":
         with open(file, mode="r", encoding="utf-8") as fp:
             for line in fp.readlines():
                 json_line = json.loads(line.strip(), encoding="utf-8")
-                if 'url' in json_line.keys():
+                if 'url' in json_line:
                     path = parse.urlparse(json_line['url']).path
                     index = path.rindex("/")
                     user_id = path[index + 1:]
-                    users.append(user_id)
+                    json_line['user_id'] = user_id
+                users.append(json_line)
 
     if user_type == "toutiao":
         with open(file, mode="r", encoding="utf-8") as fp:
             for line in fp.readlines():
                 json_line = json.loads(line.strip(), encoding="utf-8")
-                if 'url' in json_line.keys():
+                if 'url' in json_line:
                     path = parse.urlparse(json_line['url']).path
-                    start_index = path.index("r/")+2
+                    start_index = path.index("r/") + 2
                     end_index = path.rindex("/")
                     user_id = path[start_index:end_index]
-                    print(path + " => " + user_id)
-                    users.append(user_id)
+                    # print(path + " => " + user_id)
+                    json_line['user_id'] = user_id
+                users.append(json_line)
 
     return users
 
@@ -37,11 +48,11 @@ def get_user(file, user_type):
 def douyin_user_count(user_id):
     character = "ID:{}".format(user_id)
     douyin_dir = "/mnt/data/douyin/account"
-    douyin_size = count(character, douyin_dir)
+    douyin_size = count(character, douyin_dir) # 账号信息数据量
     account_size = 0 if douyin_size == None else douyin_size
-    article_dir = "/mnt/data/douyin/article"
-    article_size = count(character, article_dir)
-    article_size = 0 if article_size == None else article_size
+    micro_dir = "/mnt/data/toutiao/article/micro"
+    micro_size = count(character, micro_dir)
+    micro_size = 0 if micro_size == None else micro_size
     update_dir = "/mnt/data/douyin/update"
     update_size = count(character, update_dir)
     update_size = 0 if update_size == 0 else update_size
@@ -61,6 +72,10 @@ def douyin_user_count(user_id):
     mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
     mysql.update_data(count_result)
 
+
 if __name__ == '__main__':
     users = get_user(toutiao_user_file, "toutiao")
-    print(users)
+    for user in users:
+        id = user['user_id']
+        print(id)
+        print(user)

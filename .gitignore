@@ -5,12 +5,16 @@ web_spider/bulidings/data
 utils/data
 web_spider/__pycache__/
 web_spider/demo/__pycache__/
+monitor/__pycache__/
 /.idea/
 *.log
 *.xml
 NLP/pos_tagging/data/
 web_spider/douyin/VM2841.txt
 DeepLearning/pytorch/mnist/
+NLP/data/hotword.txt
+monitor/logs/*
+monitor/os/*.csv
 demo/data_fountain/EmotionRrecognition/data/
 NLP/ner/data/
 demo/data_fountain/EmotionRrecognition/models/
