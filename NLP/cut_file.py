@@ -28,7 +28,7 @@ def clean_text(text):
     # 多个空格变为1个
     text = re.sub(r"[，！。、‘’；：\s]{2,6}", "。", text)
     # text = re.sub(r"[(\s，),（）： —]{1,}", "。", text).strip()
-    text = re.sub(u"[叨哈呵啊操艹]{1,8}[，。？、！‘’；：·]{0,2}", "。", text)
+    text = re.sub(u"[嘻呀叨哈呵啊操艹]{1,8}[，。？、！‘’；：·]{0,2}", "。", text)
     text = re.sub(r"^[，！。‘’？、]{1}\b", "", text)
     return text
 
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     file = "./data/hotword.txt"
     with open(file, mode="r", encoding="utf-8") as fp:
         i = 0
-        for line in fp.readlines()[:]:
+        for line in fp.readlines()[969:]:
             d = json.loads(line)['content']
             print(i )
             print(d)
@@ -72,9 +72,9 @@ if __name__ == '__main__':
             print(cleanText)
             c = [word for word in jieba.cut(cleanText) if len(word.strip()) > 1]
             print()
-            print(" ".join(c))
+            print("初始分词："," ".join(c))
             # print("removed Stopwprds:")
-            lst = [clean_cutwords(word) for word in c if word not in stopwords]
+            lst = [word for word in c if word not in stopwords]
             print("最终分词："," ".join(lst))
             print("===============================\n\n")
             i += 1
