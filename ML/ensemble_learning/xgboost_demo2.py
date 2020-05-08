@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score
 #下载数据
 data = load_iris()
 X,y = data.data, data.target
+
 # 数据集分割
 X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=123457)
 # 算法参数
