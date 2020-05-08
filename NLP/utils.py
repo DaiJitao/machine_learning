@@ -61,7 +61,9 @@ def clean_chinese_text(line):
 
 
 if __name__ == "__main__":
-    data = (load_data(file))
-    text = clean_chinese_text(data)
-    print(data)
-    print(text)
+    s = "  "
+    r = u'[^\u4e00-\u9fa5.，,。？“”]+'
+    s = re.sub(r, "", s)
+    print(len(s))
+
+

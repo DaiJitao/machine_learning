@@ -83,9 +83,9 @@ def gen_content(latest_sql_result, lweek_sql_result, type_name):
     time_insert = latest_sql_result['time_insert']  # 结束时间
     # time_start = time_insert - datetime.timedelta(minutes=int(cycle_type))
     if type_name == "toutiao":
-        time_scope = "报告时间:\t" + time_insert.strftime('%Y{0}%m{1}%d{2} %H:%M').format('/', '/', '/')
+        time_scope = "报告时间:\t" + time_insert.strftime('%Y{0}%m{1}%d %H:%M').format('/', '/')
         result.append(time_scope)
-        result.append("-" * 60)
+        result.append("-" * 76)
 
     # cycle_type = "周期的类型:每隔" + cycle_type + "分钟"
     # result.append(cycle_type)
@@ -116,10 +116,10 @@ def gen_content(latest_sql_result, lweek_sql_result, type_name):
         plus = article_micro_total - week_data
         result.append(type + "微头条采集量" + str(article_micro_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
-    update_total = latest_sql_result['update_total']
-    week_data = lweek_sql_result['update_total']
-    plus = update_total - week_data
-    result.append(type + "更新信息量" + str(update_total) + "\t条,本周增量\t" + str(plus) + "\t条")
+    # update_total = latest_sql_result['update_total']
+    # week_data = lweek_sql_result['update_total']
+    # plus = update_total - week_data
+    # result.append(type + "更新信息量" + str(update_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
     if type_name == "toutiao":
         comment_total = latest_sql_result['comment_total']
@@ -129,7 +129,7 @@ def gen_content(latest_sql_result, lweek_sql_result, type_name):
 
     if type_name == "douyin":
         video_total = latest_sql_result['video_total']
-        week_data = lweek_sql_result['comment_total']
+        week_data = lweek_sql_result['video_total']
         plus = video_total - week_data
         result.append(type + "视频采集量:" + str(video_total) + "\t条,本周增量\t" + str(plus) + "\t条")
 
@@ -152,8 +152,8 @@ def send_email_all():
         mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
         lweek_res = mysql.last_week_data()
         result_douyin = gen_content(latest_sql_result, lweek_res, "douyin")
-        t = "\n" + "-" * 60 + "\n"
-        result = "自媒体采集系统采集情况报告：\n" + "-" * 60 + "\n" \
+        t = "\n" + "-" * 76 + "\n"
+        result = "自媒体采集系统采集情况报告：" + t  \
                  + result_toutiao + t + result_douyin + t
         send_email(smtp_server, receivers=receivers, email_content=result)
 
@@ -186,6 +186,10 @@ def main1():
 
 def main():
     schedule.every().friday.at("17:25").do(send_email_task)
+    i = 0
+    if i == 0:
+        schedule.every().friday.at("19:25").do(send_email_task)
+        i += 1
     while True:
         schedule.run_pending()
 

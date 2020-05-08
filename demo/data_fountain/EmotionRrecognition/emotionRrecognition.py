@@ -3,11 +3,12 @@
 """
 
 import numpy as np
-import jieba_fast as jieba
+import jieba
 import pandas as pd
 import re
 import json
 
+jieba.load_userdict("./data/user_dict.txt")
 
 def load_data(file):
     data_df = pd.read_csv(file, encoding='utf-8')
@@ -48,6 +49,12 @@ def clean_text(text):
     # 多个空格变为1个
     text = re.sub(r"\s{1,}", " ", text)
     text = re.sub(r"[(\s，)(\s,),，(（）)(：，)(： ：)]{1,}", "，", text).strip()
+    r = u'[/【】●■�→．・🐔（９８７６５４３２１０／％［］×\[\]^_`{|}~(:з」∠)）①②③④]|(#|↓|(-  -)){1,}'
+    text = re.sub(r, " ", text)
+
+    # 去掉特殊标点符号
+    # r = u'[!"#$%&\'()*+,-./:;<=>《￥★▼》，。·“”（）、；：？【】—！●■�0123456789．・９８７６５４３２１０／％［］×…?@[\\]^_`{|}~]'
+    # text = re.sub(r, '', text)
     return text
 
 
