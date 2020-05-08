@@ -63,6 +63,8 @@ class Field():
 
 
 def count(character, file_dir):
+    # grep -o 1300287065 /mnt/data/douyin/account/* |wc -l
+    # grep -o "AU:4366886698753683"  /mnt/data/toutiao/article/* |wc -l
     cmd = 'grep -o "{}"  {}/* | wc -l'.format(character, file_dir)
     logger.info("执行命令[ " + cmd + " ]")
     try:

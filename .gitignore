@@ -18,4 +18,5 @@ monitor/os/*.csv
 demo/data_fountain/EmotionRrecognition/data/
 NLP/ner/data/
 demo/data_fountain/EmotionRrecognition/models/
+.idea/inspectionProfiles/
 

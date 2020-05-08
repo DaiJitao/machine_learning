@@ -2,10 +2,33 @@ import json
 import configparser
 from monitor.logger import Logger
 from monitor.data_monitor import toutiao_user_file, douyin_user_file, count
-
+from monitor.mysql import MySQL
+import traceback
 import urllib.parse as parse
+import sys
 
 logger = Logger("./logs/all_monitor.log").logger
+
+logger = Logger("./logs/all_monitor.log").logger
+cf = configparser.ConfigParser()
+try:
+    cf.read("./config.ini")
+    types = cf.sections()
+    logger.info("获取配置成功！{}".format(types))
+except Exception as e:
+    traceback.print_exc()
+    logger.error(e)
+    logger.exception("{}".format(e))
+    sys.exit(1)
+
+
+host = cf.get(types[0], 'host')
+user = cf.get(types[0], 'user')
+password = cf.get(types[0], 'password')
+db = cf.get(types[0], 'db')
+port = cf.get(types[0], 'port')
+user_toutiao_tb = cf.get(types[0], 'user_toutiao_tb')
+user_douyin_tb = cf.get(types[0], 'user_douyin_tb')
 
 '''
 单用户统计
@@ -45,13 +68,27 @@ def get_user(file, user_type):
     return users
 
 
+def update_mysql_user():
+    """
+    更新数据库
+    :return:
+    """
+
+    mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=user_douyin_tb)
+
+
 def douyin_user_count(user_id):
     character = "ID:{}".format(user_id)
-    douyin_dir = "/mnt/data/douyin/account"
+    douyin_dir = "/mnt/data/douyin_bak/account"
     douyin_size = count(character, douyin_dir) # 账号信息数据量
     account_size = 0 if douyin_size == None else douyin_size
-    micro_dir = "/mnt/data/toutiao/article/micro"
-    micro_size = count(character, micro_dir)
+    article_dir = "/mnt/data/toutiao/article"
+    character = "AU:{}".format(user_id)
+    article_size = count(character, article_dir)
+    article_size = 0 if article_size == None else article_size
+
+
+
     micro_size = 0 if micro_size == None else micro_size
     update_dir = "/mnt/data/douyin/update"
     update_size = count(character, update_dir)
@@ -74,8 +111,8 @@ def douyin_user_count(user_id):
 
 
 if __name__ == '__main__':
-    users = get_user(toutiao_user_file, "toutiao")
+    users = get_user(douyin_user_file, "douyin")
     for user in users:
         id = user['user_id']
         print(id)
-        print(user)
+        # print(user)
