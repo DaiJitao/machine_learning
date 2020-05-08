@@ -29,8 +29,6 @@ toutiao_table = cf.get(types[0], 'toutiao_tb')
 douyin_tb = cf.get(types[0], 'douyin_tb')
 
 
-
-
 class MySQL():
     def __init__(self, host, user, pwd, db, tb, port=3306, charset="utf8"):
         self.host = host
@@ -51,6 +49,28 @@ class MySQL():
                 sql_result = cursor.fetchone()
                 logger.info("{0} data size: {1} ,data:{2}".format(self.tb, count, sql_result))
                 sql = gen_sql(self.tb, count_result=count_result, sql_result=sql_result)
+                # 执行sql语句
+                logger.info("Executing sql on {} table\n {}\n".format(self.tb, sql))
+                cursor.execute(sql)
+                self.connection.commit()
+                logger.warn("successfully executed and commited the aboved sql on {}! ".format(self.tb))
+        except Exception as e:
+            logger.error(e)
+            logger.exception("{}".format(e))
+            self.connection.rollback()
+            logger.error("update " + self.tb + " error! mysql rollbacked!")
+        finally:
+            self.connection.close()
+
+    def update_data_detail(self, count_result, user_id):
+        """具体账号：更新一条数据"""
+        try:
+            with self.connection.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
+                sql = "SELECT * FROM " + self.tb + " WHERE user_id=" + user_id + " ORDER BY time_update DESC LIMIT 1;"
+                count = cursor.execute(sql)
+                sql_result = cursor.fetchone()
+                logger.info("{0} data size: {1} ,data:{2}".format(self.tb, count, sql_result))
+                sql = gen_sql_detail(self.tb, count_result=count_result, sql_result=sql_result, user_id=user_id)
                 # 执行sql语句
                 logger.info("Executing sql on {} table\n {}\n".format(self.tb, sql))
                 cursor.execute(sql)
@@ -98,7 +118,9 @@ class MySQL():
             self.connection.close()
 
     def latest_data(self):
-        """获取最新的一条数据"""
+        """获取最新的一条数据
+        :return dict type
+        """
         try:
             with self.connection.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
                 sql = 'SELECT * FROM ' + self.tb + ' ORDER BY time_update DESC LIMIT 1;'
@@ -238,11 +260,54 @@ def gen_sql(tb, count_result, sql_result):
     return new_sql
 
 
+def gen_sql_detail(tb, count_result, sql_result, user_id):
+    '''
+
+    :param count_result: 统计结果
+    :param sql_result: SQL数据库中的结果
+    :return: 组装的SQL语句
+    '''
+    if sql_result:
+        total = sql_result['total']
+        if total < count_result['total']:
+            total_cycle = count_result['total'] - total
+            total = count_result['total']
+        else:
+            total_cycle = 0
+
+        article_total = sql_result['article_total']
+        if article_total < count_result['article_total']:
+            article_cycle = count_result['article_total'] - article_total
+            article_total = count_result['article_total']
+        else:
+            article_cycle = 0
+        account_total = sql_result['account_total']
+        if account_total < count_result['account_total']:
+            account_cycle = count_result['account_total'] - account_total
+            account_total = count_result['account_total']
+        else:
+            account_cycle = 0
+
+        sql = "INSERT INTO " + tb + \
+              " (user_id, total, total_cycle, article_total, article_cycle, account_total, account_cycle) VALUES ({0},{1}, {2},{3},{4},{5},{6});". \
+                  format(user_id, total, total_cycle, article_total, article_cycle, account_total, account_cycle)
+        return sql
+    else: # sql_result =None
+        total = count_result['total']
+        total_cycle = 0
+        article_total = count_result['article_total']
+        article_cycle = 0
+        account_total = count_result['account_total']
+        account_cycle = 0
+        sql = "INSERT INTO " + tb + \
+              " (user_id, total, total_cycle, article_total, article_cycle, account_total, account_cycle) VALUES ({0},{1}, {2},{3},{4},{5},{6});". \
+                  format(user_id, total, total_cycle, article_total, article_cycle, account_total, account_cycle)
+        return sql
+
+
 # if __name__ == '__main__':
 #     pass
-    # mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
-    # sql_result = mysql.latest_data()
-    # mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
-    # mysql.update_data(sql_result)
-
-
+# mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
+# sql_result = mysql.latest_data()
+# mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
+# mysql.update_data(sql_result)

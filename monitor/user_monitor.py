@@ -1,15 +1,15 @@
 import json
 import configparser
-from monitor.logger import Logger
-from monitor.data_monitor import toutiao_user_file, douyin_user_file, count
-from monitor.mysql import MySQL
+from data_monitor import count
+from logger import Logger
+from mysql import MySQL
 import traceback
 import urllib.parse as parse
 import sys
 
-logger = Logger("./logs/all_monitor.log").logger
+logger = Logger("./logs/user_monitor.log").logger
 
-logger = Logger("./logs/all_monitor.log").logger
+logger = Logger("./logs/user_monitor.log").logger
 cf = configparser.ConfigParser()
 try:
     cf.read("./config.ini")
@@ -27,8 +27,11 @@ user = cf.get(types[0], 'user')
 password = cf.get(types[0], 'password')
 db = cf.get(types[0], 'db')
 port = cf.get(types[0], 'port')
-user_toutiao_tb = cf.get(types[0], 'user_toutiao_tb')
-user_douyin_tb = cf.get(types[0], 'user_douyin_tb')
+douyin_detail_tb = cf.get(types[0], 'douyin_detail_tb')
+toutiao_detail_tb = cf.get(types[0], 'toutiao_detail_tb')
+toutiao_user_file=cf.get('monitorFile', 'toutiao_user_file')
+douyin_user_file=cf.get('monitorFile', 'douyin_user_file')
+
 
 '''
 单用户统计
@@ -68,51 +71,68 @@ def get_user(file, user_type):
     return users
 
 
-def update_mysql_user():
-    """
-    更新数据库
-    :return:
-    """
-
-    mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=user_douyin_tb)
-
-
 def douyin_user_count(user_id):
     character = "ID:{}".format(user_id)
     douyin_dir = "/mnt/data/douyin_bak/account"
-    douyin_size = count(character, douyin_dir) # 账号信息数据量
-    account_size = 0 if douyin_size == None else douyin_size
-    article_dir = "/mnt/data/toutiao/article"
+    #  grep -o "ID:1300287065" /mnt/data/douyin_bak/account/* |wc -l
+    size = count(character, douyin_dir) # 账号信息数据量
+    account_size = 0 if size == None else size
+
+    article_dir = "/mnt/data/douyin_bak/article"
+    #  grep -o AU:3132868345 /mnt/data/douyin_bak/article/* |wc -l
     character = "AU:{}".format(user_id)
     article_size = count(character, article_dir)
     article_size = 0 if article_size == None else article_size
+    total = account_size + article_size
+    return total, account_size,article_size
 
+def toutiao_user_count(user_id):
+    character = "BD:{}".format(user_id)
+    douyin_dir = "/mnt/data/toutiao_bak/account"
+    #  grep -o "BD:3908764883" /mnt/data/toutiao_bak/account/* |wc -l
+    size = count(character, douyin_dir) # 账号信息数据量
+    account_size = 0 if size == None else size
 
-
+    micro = "/mnt/data/toutiao_bak/article/micro"
+    text = "/mnt/data/toutiao_bak/article/text"
+    video = "/mnt/data/toutiao_bak/article/video"
+    #  grep -o AU:98252811911 /mnt/data/toutiao_bak/article/micro/* |wc -l
+    character = "AU:{}".format(user_id)
+    micro_size = count(character, micro)
     micro_size = 0 if micro_size == None else micro_size
-    update_dir = "/mnt/data/douyin/update"
-    update_size = count(character, update_dir)
-    update_size = 0 if update_size == 0 else update_size
-    video_dir = "/mnt/data/douyin/video"
-    video_size = video_count("mp4", video_dir)
-    video_size = 0 if video_dir == None else video_size
-    # 总量数据
-    total_data = account_size + article_size + update_size + video_size
-    count_result = Field.get_fields()
-    count_result['total_data'] = total_data
-    count_result['account_total'] = account_size
-    count_result['article_total'] = article_size
-    count_result['update_total'] = update_size
-    count_result['video_total'] = video_size
-    count_result['cycle_type'] = interval
+    text_size = count(character,text)
+    text_size = 0 if text_size == None else text_size
+    video_size = count(character,video)
+    video_size = 0 if video_size == None else video_size
+    article_size = micro_size + text_size + video_size
+    total = article_size + account_size
 
-    mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_tb)
-    mysql.update_data(count_result)
+    return total, account_size, article_size
 
 
-if __name__ == '__main__':
+def count_user_toutiao():
+    users = get_user(toutiao_user_file, "toutiao")
+    for user in users:
+        user_id = user['user_id']
+        if user_id != None and user_id != "":
+            total, account_size, article_size = toutiao_user_count(user_id)
+            count_result = {"total":total, "article_total": article_size, "account_total": account_size}
+            mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=toutiao_detail_tb)
+            mysql.update_data_detail(count_result,user_id)
+
+def count_user_douyin():
     users = get_user(douyin_user_file, "douyin")
     for user in users:
-        id = user['user_id']
-        print(id)
-        # print(user)
+        user_id = user['user_id']
+        if user_id != None and user_id != "":
+            total, account_size, article_size = toutiao_user_count(user_id)
+            count_result = {"total":total, "article_total": article_size, "account_total": account_size}
+            mysql = MySQL(user=user, pwd=password, host=host, db=db, tb=douyin_detail_tb)
+            mysql.update_data_detail(count_result,user_id)
+
+def main():
+    count_user_douyin()
+    count_user_toutiao()
+
+if __name__ == '__main__':
+    main()
