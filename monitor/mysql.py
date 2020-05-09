@@ -66,8 +66,9 @@ class MySQL():
         """具体账号：更新一条数据"""
         try:
             with self.connection.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
-                sql = "SELECT * FROM " + self.tb + " WHERE user_id=" + user_id + " ORDER BY time_update DESC LIMIT 1;"
-                count = cursor.execute(sql)
+                sql_t = "SELECT * FROM " + self.tb + " WHERE user_id='" + user_id + "' ORDER BY time_update DESC LIMIT 1;"
+                print("执行SQL: {}".format(sql_t))
+                count = cursor.execute(sql_t)
                 sql_result = cursor.fetchone()
                 logger.info("{0} data size: {1} ,data:{2}".format(self.tb, count, sql_result))
                 sql = gen_sql_detail(self.tb, count_result=count_result, sql_result=sql_result, user_id=user_id)
@@ -267,6 +268,7 @@ def gen_sql_detail(tb, count_result, sql_result, user_id):
     :param sql_result: SQL数据库中的结果
     :return: 组装的SQL语句
     '''
+    user_id = "'" + user_id + "'"
     if sql_result:
         total = sql_result['total']
         if total < count_result['total']:

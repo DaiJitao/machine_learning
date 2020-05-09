@@ -32,8 +32,11 @@ charset = cf.get(types[0], 'charset')
 toutiao_table = cf.get(types[0], 'toutiao_tb')
 douyin_tb = cf.get(types[0], 'douyin_tb')
 
-
 interval = cf.get(types[1], "interval")
+
+monitorFile = types[3]
+toutiao_user_file = cf.get(monitorFile, "toutiao_user_file")
+douyin_user_file = cf.get(monitorFile, "douyin_user_file")
 
 character = "%&"
 
@@ -60,6 +63,8 @@ class Field():
 
 
 def count(character, file_dir):
+    # grep -o 1300287065 /mnt/data/douyin/account/* |wc -l
+    # grep -o "AU:4366886698753683"  /mnt/data/toutiao/article/* |wc -l
     cmd = 'grep -o "{}"  {}/* | wc -l'.format(character, file_dir)
     logger.info("执行命令[ " + cmd + " ]")
     try:
@@ -92,16 +97,16 @@ def video_count(type, video_dir):
 
 
 def douyin_count():
-    douyin_dir = "/mnt/data/douyin_bak/account"
+    douyin_dir = "/mnt/data/douyin/account"
     douyin_size = count(character, douyin_dir)
     account_size = 0 if douyin_size == None else douyin_size
-    article_dir = "/mnt/data/douyin_bak/article"
+    article_dir = "/mnt/data/douyin/article"
     article_size = count(character, article_dir)
     article_size = 0 if article_size == None else article_size
-    update_dir = "/mnt/data/douyin_bak/update"
+    update_dir = "/mnt/data/douyin/update"
     update_size = count(character, update_dir)
     update_size = 0 if update_size == 0 else update_size
-    video_dir = "/mnt/data/douyin_bak/video"
+    video_dir = "/mnt/data/douyin/video"
     video_size = video_count("mp4", video_dir)
     video_size = 0 if video_dir == None else video_size
     # 总量数据
@@ -120,13 +125,13 @@ def douyin_count():
 
 def toutiao_count():
     # 账号信息
-    account_dir = "/mnt/data/toutiao_bak/account"
+    account_dir = "/mnt/data/toutiao/account"
     account_size = count(character, account_dir)
     account_size = 0 if account_size == None else account_size
     # 文章 微头条
-    article_micro_dir = "/mnt/data/toutiao_bak/article/micro"
-    article_text_dir = "/mnt/data/toutiao_bak/article/text"
-    article_video_dir = "/mnt/data/toutiao_bak/article/video"
+    article_micro_dir = "/mnt/data/toutiao/article/micro"
+    article_text_dir = "/mnt/data/toutiao/article/text"
+    article_video_dir = "/mnt/data/toutiao/article/video"
     article_micro_size = count(character, article_micro_dir)
     article_text_size = count(character, article_text_dir)
     article_video_size = count(character, article_video_dir)
@@ -135,13 +140,13 @@ def toutiao_count():
     article_video_size = 0 if article_video_size == None else article_video_size
     article_size = article_text_size + article_micro_size + article_video_size
     # comment
-    comment_dir = "/mnt/data/toutiao_bak/comment"
+    comment_dir = "/mnt/data/toutiao/comment"
     comment_size = count(character, comment_dir)
     comment_size = 0 if comment_size == None else comment_size
     # update
-    update_micro_dir = "/mnt/data/toutiao_bak/update/micro"
-    update_text_dir = "/mnt/data/toutiao_bak/update/text"
-    update_video_dir = "/mnt/data/toutiao_bak/update/video"
+    update_micro_dir = "/mnt/data/toutiao/update/micro"
+    update_text_dir = "/mnt/data/toutiao/update/text"
+    update_video_dir = "/mnt/data/toutiao/update/video"
     update_micro_size = count(character, update_micro_dir)
     update_text_size = count(character, update_text_dir)
     update_video_size = count(character, update_video_dir)
