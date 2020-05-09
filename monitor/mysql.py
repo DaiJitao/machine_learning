@@ -47,8 +47,12 @@ class MySQL():
                 sql = 'SELECT * FROM ' + self.tb + ' ORDER BY time_update DESC LIMIT 1;'
                 count = cursor.execute(sql)
                 sql_result = cursor.fetchone()
-                logger.info("{0} data size: {1} ,data:{2}".format(self.tb, count, sql_result))
-                sql = gen_sql(self.tb, count_result=count_result, sql_result=sql_result)
+                if sql_result:
+                    logger.info("{0} data size: {1} ,data:{2}".format(self.tb, count, sql_result))
+                    sql = gen_sql(self.tb, count_result=count_result, sql_result=sql_result)
+                else:
+                    sql = "INSERT INTO toutiao_tb(total_data) VALUES (0);"# 初始化数据库
+
                 # 执行sql语句
                 logger.info("Executing sql on {} table\n {}\n".format(self.tb, sql))
                 cursor.execute(sql)
