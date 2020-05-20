@@ -2,6 +2,7 @@ import jieba_fast as jieba
 import re
 import json
 
+
 def clean_text(text):
     text = str(text)
     # 去掉url地址
@@ -28,7 +29,7 @@ def clean_text(text):
     # 多个空格变为1个
     text = re.sub(r"[，！。、‘’；：\s]{2,6}", "。", text)
     # text = re.sub(r"[(\s，),（）： —]{1,}", "。", text).strip()
-    text = re.sub(u"[嘻呀叨哈呵啊操艹]{1,8}[，。？、！‘’；：·]{0,2}", "。", text)
+    text = re.sub(u"[帅叨哈呵呀哎嘻啊操艹]{1,8}[，。？、！‘’；：·]{0,2}", "。", text)
     text = re.sub(r"^[，！。‘’？、]{1}\b", "", text)
     return text
 
@@ -50,11 +51,23 @@ def clean_cutwords(word):
     return ''
 
 
+def user_dict(outfile):
+    s = set([line.strip() for line in open('./data/userdict.txt', encoding='utf-8')])
+    s = [word + " 100 n" for word in s]
+    with open(outfile, mode='w', encoding='utf-8') as fp:
+        fp.write("\n".join(s))
+
+
+if __name__ == '__main__1':
+    out_file = "./data/userdict1.txt"
+    user_dict(out_file)
+
 if __name__ == '__main__':
 
-    userwords = [line.rstrip() for line in open('./data/userdict.txt', encoding='utf-8')]
-    for word in userwords:
-        jieba.add_word(word.strip())
+    # userwords = [line.rstrip() for line in open('./data/userdict.txt', encoding='utf-8')]
+    # for word in userwords:
+    #     jieba.add_word(word.strip())
+    jieba.load_userdict('./data/userdict.txt')
     stopwords = [line.rstrip() for line in open('./data/stopwords.txt', encoding='utf-8')]
     # with open("./data/stopwords1.txt", mode="w+", encoding="utf-8") as fp:
     #     s = set(stopwords)
@@ -63,25 +76,27 @@ if __name__ == '__main__':
     file = "./data/hotword.txt"
     with open(file, mode="r", encoding="utf-8") as fp:
         i = 0
-        for line in fp.readlines()[969:]:
+        for line in fp.readlines()[:]:
             d = json.loads(line)['content']
-            print(i )
+            print(i)
             print(d)
             cleanText = clean_text(d)
-            print("-"*60 + "清洗之后：")
+            print("-" * 60 + "清洗之后：")
             print(cleanText)
             c = [word for word in jieba.cut(cleanText) if len(word.strip()) > 1]
             print()
-            print("初始分词："," ".join(c))
-            # print("removed Stopwprds:")
-            lst = [word for word in c if word not in stopwords]
-            print("最终分词："," ".join(lst))
+            print("初始分词：", " ".join(c))
+            print("removed Stopwprds:")
+            lst1 = [word for word in c if word not in stopwords]
+            print("最终分词：", " ".join(lst1))
             print("===============================\n\n")
             i += 1
 
-
-    text = "@古镇珠山发布 "
+    text = "正月初四初五"
     print(text)
-    # text = re.sub(r"//@.{1,}:\s{0,1}|\[.{1,5}\]|@.{1,}:\s{0,1}", "，", text)
-    text = clean_text(text)
+
+    # jieba.load_userdict('./data/userdict.txt')
+    jieba.load_userdict('./data/supplement.txt')
+
+    text = [w for w in jieba.cut(text)]
     print(text)
