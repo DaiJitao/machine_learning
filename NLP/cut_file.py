@@ -1,6 +1,8 @@
 import jieba_fast as jieba
+from pyhanlp import HanLP
 import re
 import json
+from typing import List
 
 
 def clean_text(text):
@@ -9,10 +11,10 @@ def clean_text(text):
     text = re.sub('''http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+''', '', text)
     # 去掉@某某某  text = re.sub(r"@.{1,12}\s", "，", text)
     text = re.sub(r"//@[^@]{1,20}:\s{0,1}|\[.{1,5}\]|@[^@]{1,}:\s{0,1}|@.{1,10}\s", "，", text)
-    text = re.sub(r"@[^a].{1,10}","，", text)
+    text = re.sub(r"@[^a].{1,10}", "，", text)
     # text = re.sub(r"\[.{0,5}\]|//@.{1,15}[:\s]{1,2}|@.{1,15}[:\s]{1,2}", "，", text)
     text = re.sub(r"分享来自：.{1,6}\s", "", text)
-    text = re.sub(r"(？，){1,3}|(。，){1,3}|(！，){1,6}","。", text)
+    text = re.sub(r"(？，){1,3}|(。，){1,3}|(！，){1,6}", "。", text)
     # 多个问号变为一个问号
     text = re.sub(r"[！!。？\?]{2,}", "！", text)
     # 去掉#某某某# 和单个字母单个数字
@@ -59,6 +61,36 @@ def user_dict(outfile):
         fp.write("\n".join(s))
 
 
+def load_hanlp_nature(file: str = "./data/hanlp/hanlp_word_nature.txt") -> dict:
+    """
+    获取hanlp词性
+    :param file:
+    :return: dict()
+    """
+    with open(file, mode="r", encoding="utf-8") as fp:
+        result = {}
+        lines = fp.readlines()
+        for line in lines:
+            wn = line.strip().split(" ")
+            result[wn[0]] = wn[-1]
+    return result
+
+
+def hanLp_cut(text, isNature=True):
+    natures = load_hanlp_nature()
+    r = []
+    words = HanLP.segment(text)
+    for w in words:
+        word = w.word
+        if isNature:
+            nture = w.nature
+            chN = natures[nture.toString()]
+            r.append(word + ":( "+nture.toString() + chN + ")")
+        else:
+            r.append(word.strip())
+    return r
+
+
 if __name__ == '__main__1':
     out_file = "./data/userdict1.txt"
     user_dict(out_file)
@@ -72,26 +104,25 @@ if __name__ == '__main__':
     with open(file, mode="r", encoding="utf-8") as fp:
         i = 0
         for line in fp.readlines()[:]:
-            d = json.loads(line)['content']
+            text = json.loads(line)['content']
             print(i)
-            print(d)
-            cleanText = clean_text(d)
+            cleanedText = clean_text(text)
             print("-" * 60 + "清洗之后：")
-            print(cleanText)
-            c = [word for word in jieba.cut(cleanText) if len(word.strip()) > 1]
-            print()
-            print("初始分词：", " ".join(c))
+            print(cleanedText)
+            c = [word for word in jieba.cut(cleanedText)]
+            print("jieba初始分词：", " ".join(c))
             print("removed Stopwprds:")
-            lst1 = [word for word in c if word not in stopwords]
-            print("最终分词：", " ".join(lst1))
+            lst1 = [word.strip() for word in c if word.strip() not in stopwords]
+            print("jieba最终分词：", " ".join(lst1))
+            hanlpWords = hanLp_cut(cleanedText,False)
+            lst1 = [word for word in hanlpWords if word not in stopwords]
+            print("hanlp最终分词：", " ".join(lst1))
             print("===============================\n\n")
             i += 1
+            if i == 1: break
 
     text = "正月初四初五"
     print(text)
-
-    # jieba.load_userdict('./data/userdict.txt')
-    jieba.load_userdict('./data/supplement.txt')
 
     text = [w for w in jieba.cut(text)]
     print(text)
