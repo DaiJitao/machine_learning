@@ -9,6 +9,7 @@ def clean_text(text):
     text = re.sub('''http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+''', '', text)
     # 去掉@某某某  text = re.sub(r"@.{1,12}\s", "，", text)
     text = re.sub(r"//@[^@]{1,20}:\s{0,1}|\[.{1,5}\]|@[^@]{1,}:\s{0,1}|@.{1,10}\s", "，", text)
+    text = re.sub(r"@[^a].{1,10}","，", text)
     # text = re.sub(r"\[.{0,5}\]|//@.{1,15}[:\s]{1,2}|@.{1,15}[:\s]{1,2}", "，", text)
     text = re.sub(r"分享来自：.{1,6}\s", "", text)
     text = re.sub(r"(？，){1,3}|(。，){1,3}|(！，){1,6}","。", text)
@@ -64,14 +65,8 @@ if __name__ == '__main__1':
 
 if __name__ == '__main__':
 
-    # userwords = [line.rstrip() for line in open('./data/userdict.txt', encoding='utf-8')]
-    # for word in userwords:
-    #     jieba.add_word(word.strip())
     jieba.load_userdict('./data/userdict.txt')
     stopwords = [line.rstrip() for line in open('./data/stopwords.txt', encoding='utf-8')]
-    # with open("./data/stopwords1.txt", mode="w+", encoding="utf-8") as fp:
-    #     s = set(stopwords)
-    #     fp.write("\n".join(s))
 
     file = "./data/hotword.txt"
     with open(file, mode="r", encoding="utf-8") as fp:
