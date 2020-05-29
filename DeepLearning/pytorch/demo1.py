@@ -33,6 +33,15 @@ def demo2():
     print("b导数：", b.grad)
 
 
+def demo5():
+    pass
+
+if __name__ == '__main__':
+    a = torch.randn((3,2))
+
+    print(a)
+
+
 def demo3():
     """
     比如有一个函数，y=x的平方（y=x2）,在x=3的时候它的导数为6，我们通过代码来演示这样一个过程。
@@ -70,7 +79,7 @@ print(a)
 print(torch.sigmoid(a))
 print(torch.Tensor(4, 4).uniform_(0, 1))
 print()
-if __name__ == '__main__':
+if __name__ == '__main__1':
     w = Variable(torch.Tensor([1.0]), True)
     x_data = [11, 22, 33.0]
     y_data = [21., 14., 64]

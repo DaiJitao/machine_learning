@@ -24,10 +24,7 @@ sg ({0, 1}, optional) – 模型的训练算法: 1: skip-gram; 0: CBOW
 alpha (float, optional) – 初始学习率
 iter (int, optional) – 迭代次数，默认为5
 '''
-negwords = pd.read_csv(negOutDataFile)
-poswords = pd.read_csv(posOutDataFile)
 
-sentences = negwords['words'].tolist() + poswords['words'].tolist()
 
 def removed_numbers(words):
     """
@@ -42,14 +39,20 @@ def removed_numbers(words):
         return ""
 
 
-sentences = [removed_numbers(words) for words in sentences ]
-sentences = [s.split(" ") for s in sentences]
-print(sentences[:6])
 
-isTrain = False
-isTest = True
+
+isTrain = False # 是否训练词向量
+isTest = True # 词向量的测试
 saveModel = "./models/gensim_CBOW_w2v.model"
+
 if isTrain:
+    negwords = pd.read_csv(negOutDataFile)
+    poswords = pd.read_csv(posOutDataFile)
+
+    sentences = negwords['words'].tolist() + poswords['words'].tolist()
+    sentences = [removed_numbers(words) for words in sentences]
+    sentences = [s.split(" ") for s in sentences]
+    print(sentences[:6])
     model = Word2Vec(sentences, size=512, sg=0, window=5, min_count=5, workers=multiprocessing.cpu_count())
     model.save(saveModel)
     print("模型已经保存："+saveModel)
@@ -58,6 +61,6 @@ if isTest:
     # 加载模型
     model = Word2Vec.load(saveModel)
     pprint(model.wv.most_similar("北京"))
-    # 获取词向量
+
     pprint(model['北京'])
 
