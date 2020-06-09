@@ -29,9 +29,13 @@ accepts = ["text/plain", "application/json, text/javascript", "*/*",
            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"
            ]
 
-driver_path = r"F:\pycharm_workspace\python3_x\machine_learning\project\spider_learning\driver\geckodriver-v0.26.0-win64\geckodriver.exe"
+isXinHua = False
+if isXinHua:
+    driver_path = r"F:\pycharm_workspace\python3_x\machine_learning\project\spider_learning\driver\geckodriver-v0.26.0-win64\geckodriver.exe"
+else:
+    driver_path = r"F:\pycharm_workspce\dai_github\ml_test1\machine_learning\project\spider_learning\driver\geckodriver-v0.26.0-win64\geckodriver.exe"
 firefox_options = webdriver.FirefoxOptions()
-firefox_options.add_argument("--headless")
+# firefox_options.add_argument("--headless")
 
 
 def mkdir(path):
@@ -51,6 +55,7 @@ def load_page(url):
             logging.info(url + " page source loaded successfully")
             return page_source
     except Exception as e:
+        logging.error(e)
         logging.exception(e)
     finally:
         browser.close()
