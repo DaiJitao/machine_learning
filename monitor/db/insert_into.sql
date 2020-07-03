@@ -57,3 +57,5 @@ def gen_sql(dict_):
           'comment_total, comment_cycle,' \
           'video_total,video_cycle' \
           ');'
+
+INSERT INTO douyin_tb (cycle_type, article_total) VALUES ('30',90000);

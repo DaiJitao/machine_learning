@@ -76,7 +76,6 @@ def parse(page_source):
         logging.info("parsing page source...")
         doc = pq(page_source)
         article_title = doc.find(".article-title").text()
-        logging.info("文章标题==========>{}".format(article_title))
         content_tag = doc.find(".article-content")
         content = article_title + "\n"  # 文章正文
         video_urls = []
@@ -123,11 +122,12 @@ def load_videos(video_url, save_path, file_name):
     file = save_path + file_name
     try:
         logging.info(video_url + " loading... ")
-        response = requests.get(video_url, headers=headers)
+        response = requests.get(video_url, headers=headers, stream=True)
         if response.status_code == 200:
             mkdir(save_path)
             with open(file, mode="wb") as fp:
                 fp.write(response.content)
+
             logging.info(file + " loaded successfully!")
         elif response.status_code == 403:
             logging.error(response.status_code)
@@ -143,12 +143,7 @@ def load_article(article_url):
     :return:
     """
     page_source = load_page(article_url)
-    index = article_url.index("com/") + 4
-    name = article_url[index:-1]
-    with open(file="E:/data/toutiao/article/{}.txt".format(name), encoding='utf-8', mode="w+") as fp:
-        fp.write(page_source)
     content, image_urls, video_urls = parse(page_source)
-    logging.info("正文: {}\n 图片{}\n 视频{}".format(content,image_urls,video_urls))
     return content, image_urls, video_urls
 
 
@@ -166,8 +161,5 @@ def main(article_url):
 
 
 if __name__ == '__main__':
-    #  "https://www.toutiao.com/i6792822936743969287/" #
-    # "https://www.toutiao.com/i6792817006111359495/" "https://www.toutiao.com/i6792817299754582541/" "https://www.toutiao.com/i6792820767974228493/" #
-    # article_url = "https://www.toutiao.com/i6793908353828389379/"  # "https://www.toutiao.com/i6795123939421979139/"
-    article_url = "https://www.toutiao.com/i6835639760615113230/"
-    main(article_url)
+    url = "https://www.xuexi.cn/d7c524f75a99e33565a5f01c84139f2c/cf94877c29e1c685574e0226618fb1be.html"
+    load_videos(url,"./", "test.mp4")

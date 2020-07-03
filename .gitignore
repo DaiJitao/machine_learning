@@ -18,5 +18,7 @@ monitor/os/*.csv
 demo/data_fountain/EmotionRrecognition/data/
 NLP/ner/data/
 demo/data_fountain/EmotionRrecognition/models/
+NLP/Chinese-sentiment-analysis/models/
+NLP/Chinese-sentiment-analysis/data/
 .idea/inspectionProfiles/
 
