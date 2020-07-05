@@ -21,4 +21,5 @@ demo/data_fountain/EmotionRrecognition/models/
 NLP/Chinese-sentiment-analysis/models/
 NLP/Chinese-sentiment-analysis/data/
 .idea/inspectionProfiles/
+DeepLearning/pytorch/LSTM/data/
 
