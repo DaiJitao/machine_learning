@@ -76,6 +76,7 @@ def parse(page_source):
         logging.info("parsing page source...")
         doc = pq(page_source)
         article_title = doc.find(".article-title").text()
+        logging.info("文章标题==========>{}".format(article_title))
         content_tag = doc.find(".article-content")
         content = article_title + "\n"  # 文章正文
         video_urls = []
@@ -142,7 +143,12 @@ def load_article(article_url):
     :return:
     """
     page_source = load_page(article_url)
+    index = article_url.index("com/") + 4
+    name = article_url[index:-1]
+    with open(file="E:/data/toutiao/article/{}.txt".format(name), encoding='utf-8', mode="w+") as fp:
+        fp.write(page_source)
     content, image_urls, video_urls = parse(page_source)
+    logging.info("正文: {}\n 图片{}\n 视频{}".format(content,image_urls,video_urls))
     return content, image_urls, video_urls
 
 
@@ -162,5 +168,6 @@ def main(article_url):
 if __name__ == '__main__':
     #  "https://www.toutiao.com/i6792822936743969287/" #
     # "https://www.toutiao.com/i6792817006111359495/" "https://www.toutiao.com/i6792817299754582541/" "https://www.toutiao.com/i6792820767974228493/" #
-    article_url = "https://www.toutiao.com/i6793908353828389379/"  # "https://www.toutiao.com/i6795123939421979139/"
+    # article_url = "https://www.toutiao.com/i6793908353828389379/"  # "https://www.toutiao.com/i6795123939421979139/"
+    article_url = "https://www.toutiao.com/i6835639760615113230/"
     main(article_url)
