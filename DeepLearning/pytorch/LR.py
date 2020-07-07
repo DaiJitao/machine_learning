@@ -75,6 +75,7 @@ if __name__ == '__main__':
     plt.subplot(1, 1, 1)
     plt.plot(x_train, y_train, label="train data")
     plt.plot(x_train,predit,label='predict data')
+    plt.legend()
     plt.show()
     print("退出。。。")
     sys.exit(1)
