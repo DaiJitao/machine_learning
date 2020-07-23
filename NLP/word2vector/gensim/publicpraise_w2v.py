@@ -123,7 +123,7 @@ def window_demo():
     data_path = r'C:\Users\dell\Desktop\praise_w2c\data\\'
     save_model_file = "../model/model_1.w2v"  # 模型保存路径
 
-    if True:
+    if False:
         # 清洗数据
         files = os.listdir(data_path)
         files = [data_path + name for name in files]
@@ -135,13 +135,14 @@ def window_demo():
         praise.cut_data(cleaned_file, cut_file)
         print("分词完毕！")
 
-    if False:
+    if True:
         # 训练词向量
         model = Word2VecModel()
         sentences = word2vec.LineSentence(cut_file)  # model.input_data(files=[cut_file])
         print("数据格式化成功： ", sentences)
-        model.train(sentences, save_model_file=save_model_file)
-        print("保存成功！", save_model_file)
+
+        # model.train(sentences, save_model_file=save_model_file)
+        # print("保存成功！", save_model_file)
 
     if False:
         model = Word2Vec.load(save_model_file)
@@ -155,7 +156,7 @@ def linux_res():
     data_path = './data/taskDir/'
     save_model_file = "./model/model_1.w2v"  # 模型保存路径
 
-    if True:
+    if False:
         # 清洗数据
         files = os.listdir(data_path)
         files = [data_path + name for name in files]
@@ -181,6 +182,6 @@ def linux_res():
         print(s)
 
 if __name__ == '__main__':
-    linux_res()
-    # window_demo()
+    # linux_res()
+    window_demo()
 
