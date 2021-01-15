@@ -22,4 +22,6 @@ NLP/Chinese-sentiment-analysis/models/
 NLP/Chinese-sentiment-analysis/data/
 .idea/inspectionProfiles/
 DeepLearning/pytorch/LSTM/data/
-
+NLP/tokenizer/__pycache__/
+NLP/tokenizer/data/
+venv/
