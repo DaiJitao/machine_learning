@@ -25,3 +25,7 @@ DeepLearning/pytorch/LSTM/data/
 NLP/tokenizer/__pycache__/
 NLP/tokenizer/data/
 venv/
+DeepLearning/tensorflow/inception_log/
+DeepLearning/tensorflow/inception_model/
+DeepLearning/tensorflow/data/
+DeepLearning/tensorflow/net/
